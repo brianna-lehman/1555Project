@@ -1,0 +1,9 @@
+drop table MUTUALFUND cascade constraints;
+drop table CLOSINGPRICE cascade constraints;
+drop table CUSTOMER cascade constraints;
+drop table ADMINISTRATOR cascade constraints;
+drop table ALLOCATION cascade constraints;
+drop table PREFERS cascade constraints;
+drop table TRXLOG cascade constraints;
+drop table OWNS cascade constraints;
+drop table MUTUALDATE cascade constraints;
