@@ -12,16 +12,22 @@ purge recyclebin;
 
 create table MUTUALFUND (
 	symbol varchar2(20),
+	-- constraint: only possible names are money-market, real-estate, short-termbonds,
+	-- long-term-bonds, balance-bonds-stocks, social-responsibility-bonds-stocks, general-stocks,
+	-- aggressive-stocks or international-markets-stocks
 	name varchar2(30),
 	description varchar2(100),
+	-- constraint: only possible categories are fixed, bonds, stocks or mixed
 	category varchar2(10)
 	c_date date,
 	constraint pk_mutualfund primary key(symbol)
 );
 
+-- create a trigger that adds an entry to closingprice every time an entry is added
+-- to mutualfund
 create table CLOSINGPRICE (
 	symbol varchar2(20),
-	price float,
+	price float(2),
 	p_date date,
 	constraint pk_closingprice primary key(symbol, p_date),
 	constraint fk_closingprice_mutualfund foreign key(symbol)
@@ -34,7 +40,7 @@ create table CUSTOMER (
 	email varchar2(30),
 	address varchar2(30),
 	password varchar2(10),
-	balance float,
+	balance float(2),
 	constraint pk_customer primary key(login)
 );
 
@@ -59,7 +65,7 @@ create table ALLOCATION (
 create table PREFERS (
 	allocation_no int,
 	symbol varchar2(20),
-	percentage float,
+	percentage float(2),
 	constraint pk_prefers primary key(allocation_no, symbol),
 	constraint fk_prefers_alloc foreign key(allocation_no)
 		references ALLOCATION(allocation_no),
@@ -75,8 +81,8 @@ create table TRXLOG (
 	-- create a constraint for action so that it's only 'deposit' 'sell' or 'buy'
 	action varchar2(10),
 	num_shares int,
-	price float,
-	amount float,
+	price float(2),
+	amount float(2),
 	constraint pk_trxlog primary key(trans_id),
 	constraint fk_trxlog_cust foreign key(login)
 		references CUSTOMER(login),
