@@ -55,3 +55,47 @@ create table ALLOCATION (
 	constraint fk_allocation_customer foreign key(login)
 		references CUSTOMER(login)
 );
+
+create table PREFERS (
+	allocation_no int,
+	symbol varchar2(20),
+	percentage float,
+	constraint pk_prefers primary key(allocation_no, symbol),
+	constraint fk_prefers_alloc foreign key(allocation_no)
+		references ALLOCATION(allocation_no),
+	constraint fk_prefers_mutfund foreign key(symbol)
+		references MUTUALFUND(symbol)
+);
+
+create table TRXLOG (
+	trans_id int,
+	login varchar2(10),
+	symbol varchar2(20),
+	t_date date,
+	-- create a constraint for action so that it's only 'deposit' 'sell' or 'buy'
+	action varchar2(10),
+	num_shares int,
+	price float,
+	amount float,
+	constraint pk_trxlog primary key(trans_id),
+	constraint fk_trxlog_cust foreign key(login)
+		references CUSTOMER(login),
+	constraint fk_trxlog_mutfund foreign key(symbol)
+		references MUTUALFUND(symbol)
+);
+
+create table OWNS(
+	login varchar2(10),
+	symbol varchar(20),
+	shares int,
+	constraint pk_owns primary key(login, symbol),
+	constraint fk_own_cust foreign key(login)
+		references CUSTOMER(login),
+	constraint fk_own_mutfund foreign key(symbol),
+		references MUTUALFUND(symbol)
+);
+
+create table MUTUALDATE (
+	c_date date,
+	constraint pk_mutdate primary key(c_date)
+);
