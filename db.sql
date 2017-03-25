@@ -15,11 +15,11 @@ create domain mutfund_name as varchar(30)
 					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
 					'aggressive-stocks', 'international-markets-stocks'));
 
+create domain trx_action as varchar2(10)
+	check (value in ('deposit', 'sell', 'buy'));
+
 create table MUTUALFUND (
 	symbol varchar2(20),
-	-- constraint: only possible names are money-market, real-estate, short-termbonds,
-	-- long-term-bonds, balance-bonds-stocks, social-responsibility-bonds-stocks, general-stocks,
-	-- aggressive-stocks or international-markets-stocks
 	name mutfund_name,
 	description varchar2(100),
 	-- constraint: only possible categories are fixed, bonds, stocks or mixed
@@ -83,8 +83,7 @@ create table TRXLOG (
 	login varchar2(10),
 	symbol varchar2(20),
 	t_date date,
-	-- create a constraint for action so that it's only 'deposit' 'sell' or 'buy'
-	action varchar2(10),
+	action trx_action,
 	num_shares int,
 	price float(2),
 	amount float(2),
@@ -110,3 +109,6 @@ create table MUTUALDATE (
 	c_date date,
 	constraint pk_mutdate primary key(c_date)
 );
+
+create trigger add_trxlog
+	after insert on --deposit
