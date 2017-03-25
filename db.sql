@@ -10,12 +10,17 @@ drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
 
+create domain mutfund_name as varchar(30)
+	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
+					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
+					'aggressive-stocks', 'international-markets-stocks'));
+
 create table MUTUALFUND (
 	symbol varchar2(20),
 	-- constraint: only possible names are money-market, real-estate, short-termbonds,
 	-- long-term-bonds, balance-bonds-stocks, social-responsibility-bonds-stocks, general-stocks,
 	-- aggressive-stocks or international-markets-stocks
-	name varchar2(30),
+	name mutfund_name,
 	description varchar2(100),
 	-- constraint: only possible categories are fixed, bonds, stocks or mixed
 	category varchar2(10)
