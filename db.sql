@@ -1,3 +1,11 @@
+-- ***********************************************************************************************************
+--  NOTES:
+--  - Ask if views are needed in the first phase. If so, where would we need them
+--  - Ask about contraint needed in ALLOCATION for 30 day requirement. How do you approach it?
+--  - Where do we need to use functions and/or procedures
+-- ************************************************************************************************************
+
+
 drop table MUTUALFUND cascade constraints;
 drop table CLOSINGPRICE cascade constraints;
 drop table CUSTOMER cascade constraints;
@@ -14,6 +22,12 @@ create domain mutfund_name as varchar(30)
 	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
 					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
 					'aggressive-stocks', 'international-markets-stocks'));
+-- *****************************************************************************
+-- Double check if extra constraints are needed to limit mutual funds to specific category
+-- *****************************************************************************
+create domain Category_Check as varchar2(10)
+	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
+	
 
 create domain trx_action as varchar2(10)
 	check (value in ('deposit', 'sell', 'buy'));
@@ -23,7 +37,7 @@ create table MUTUALFUND (
 	name mutfund_name,
 	description varchar2(100),
 	-- constraint: only possible categories are fixed, bonds, stocks or mixed
-	category varchar2(10)
+	category Category_Check,
 	c_date date,
 	constraint pk_mutualfund primary key(symbol)
 );
@@ -109,6 +123,3 @@ create table MUTUALDATE (
 	c_date date,
 	constraint pk_mutdate primary key(c_date)
 );
-
-create trigger add_trxlog
-	after insert on --deposit
