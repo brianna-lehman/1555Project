@@ -25,7 +25,7 @@ create domain mutfund_name as varchar(30)
 -- *****************************************************************************
 -- Double check if extra constraints are needed to limit mutual funds to specific category
 -- *****************************************************************************
-create domain Category_Check as varchar2(10)
+create domain category_check as varchar2(10)
 	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
 	
 
