@@ -17,20 +17,18 @@ drop table OWNS cascade constraints;
 drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
-
+-- Mutual funds needed (string is invalid if not listed)
 create domain mutfund_name as varchar(30)
 	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
 					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
 					'aggressive-stocks', 'international-markets-stocks'));
--- *****************************************************************************
--- Double check if extra constraints are needed to limit mutual funds to specific category
--- *****************************************************************************
+-- Categories for the mutual funds
 create domain category_check as varchar2(10)
 	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
-	
 
 create domain trx_action as varchar2(10)
 	check (value in ('deposit', 'sell', 'buy'));
+
 
 create table MUTUALFUND (
 	symbol varchar2(20),
