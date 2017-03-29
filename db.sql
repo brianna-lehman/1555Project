@@ -23,7 +23,7 @@ create domain mutfund_name as varchar(30)
 	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
 					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
 					'aggressive-stocks', 'international-markets-stocks'));
-	
+
 -- Categories for the mutual funds
 create domain category_check as varchar2(10)
 	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
@@ -120,3 +120,33 @@ create table MUTUALDATE (
 	c_date date,
 	constraint pk_mutdate primary key(c_date) deferrable initially immediate
 );
+
+create view browse_mf_name as
+	select *
+	from MUTUALFUND
+	group by name asc;
+
+create view all_customer_data as
+	select *
+	from CUSTOMER NATURAL JOIN 
+		 ALLOCATION NATURAL JOIN
+		 PREFERS NATURAL JOIN 
+		 MUTUALFUND NATURAL JOIN 
+		 CLOSINGPRICE;
+
+create or replace procedure browse_mf_category (in category_var varchar(10))
+	begin
+		select *
+		from MUTUALFUND
+		where category = category_var;
+	end;
+	/
+
+create or replace procedure browse_mf_category (in date_var date)
+	begin
+		select mf.symbol, mf.name, mf.description, mf.category, mf.c_date
+		from MUTUALFUND mf NATURAL JOIN CLOSINGPRICE cp
+		where mf.c_date = date_var
+		group by cp.price asc;
+	end;
+	/
