@@ -22,9 +22,7 @@ create domain mutfund_name as varchar(30)
 	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
 					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
 					'aggressive-stocks', 'international-markets-stocks'));
--- *****************************************************************************
--- Double check if extra constraints are needed to limit mutual funds to specific category
--- *****************************************************************************
+
 create domain Category_Check as varchar2(10)
 	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
 	
@@ -36,21 +34,18 @@ create table MUTUALFUND (
 	symbol varchar2(20),
 	name mutfund_name,
 	description varchar2(100),
-	-- constraint: only possible categories are fixed, bonds, stocks or mixed
 	category Category_Check,
 	c_date date,
-	constraint pk_mutualfund primary key(symbol)
+	constraint pk_mutualfund primary key(symbol) deferrable initially immediate
 );
 
--- create a trigger that adds an entry to closingprice every time an entry is added
--- to mutualfund
 create table CLOSINGPRICE (
 	symbol varchar2(20),
 	price float(2),
 	p_date date,
-	constraint pk_closingprice primary key(symbol, p_date),
+	constraint pk_closingprice primary key(symbol, p_date) deferrable initially immediate,
 	constraint fk_closingprice_mutualfund foreign key(symbol)
-		references MUTUALFUND(symbol)
+		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
 create table CUSTOMER (
@@ -60,7 +55,7 @@ create table CUSTOMER (
 	address varchar2(30),
 	password varchar2(10),
 	balance float(2),
-	constraint pk_customer primary key(login)
+	constraint pk_customer primary key(login) deferrable initially immediate
 );
 
 create table ADMINISTRATOR (
@@ -69,27 +64,27 @@ create table ADMINISTRATOR (
 	email varchar2(30),
 	address varchar2(30),
 	password varchar2(10),
-	constraint pk_administrator primary key(login)
+	constraint pk_administrator primary key(login) deferrable initially immediate
 );
 
 create table ALLOCATION (
 	allocation_no int,
 	login varchar2(10),
 	p_date date,
-	constraint pk_allocation primary key(allocation_no),
+	constraint pk_allocation primary key(allocation_no) deferrable initially immediate,
 	constraint fk_allocation_customer foreign key(login)
-		references CUSTOMER(login)
+		references CUSTOMER(login) deferrable initially immediate
 );
 
 create table PREFERS (
 	allocation_no int,
 	symbol varchar2(20),
 	percentage float(2),
-	constraint pk_prefers primary key(allocation_no, symbol),
+	constraint pk_prefers primary key(allocation_no, symbol) deferrable initially immediate,
 	constraint fk_prefers_alloc foreign key(allocation_no)
-		references ALLOCATION(allocation_no),
+		references ALLOCATION(allocation_no) deferrable initially immediate,
 	constraint fk_prefers_mutfund foreign key(symbol)
-		references MUTUALFUND(symbol)
+		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
 create table TRXLOG (
@@ -101,25 +96,25 @@ create table TRXLOG (
 	num_shares int,
 	price float(2),
 	amount float(2),
-	constraint pk_trxlog primary key(trans_id),
+	constraint pk_trxlog primary key(trans_id) deferrable initially immediate,
 	constraint fk_trxlog_cust foreign key(login)
-		references CUSTOMER(login),
+		references CUSTOMER(login) deferrable initially immediate,
 	constraint fk_trxlog_mutfund foreign key(symbol)
-		references MUTUALFUND(symbol)
+		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
 create table OWNS(
 	login varchar2(10),
 	symbol varchar(20),
 	shares int,
-	constraint pk_owns primary key(login, symbol),
+	constraint pk_owns primary key(login, symbol) deferrable initially immediate,
 	constraint fk_own_cust foreign key(login)
-		references CUSTOMER(login),
-	constraint fk_own_mutfund foreign key(symbol),
-		references MUTUALFUND(symbol)
+		references CUSTOMER(login) deferrable initially immediate,
+	constraint fk_own_mutfund foreign key(symbol)
+		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
 create table MUTUALDATE (
 	c_date date,
-	constraint pk_mutdate primary key(c_date)
+	constraint pk_mutdate primary key(c_date) deferrable initially immediate
 );
