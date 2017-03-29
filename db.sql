@@ -127,12 +127,12 @@ create view browse_mf_name as
 	group by name asc;
 
 create view all_customer_data as
-	select *
-	from CUSTOMER NATURAL JOIN 
-		 ALLOCATION NATURAL JOIN
-		 PREFERS NATURAL JOIN 
-		 MUTUALFUND NATURAL JOIN 
-		 CLOSINGPRICE;
+	select o.shares, mf.symbol, mf.name, mf.description, 
+			mf.category, mf.c_date, cp.price, cp.p_date
+	from CUSTOMER c NATURAL JOIN 
+		 OWNS o NATURAL JOIN
+		 MUTUALFUND mf NATURAL JOIN 
+		 CLOSINGPRICE cp;
 
 create or replace procedure browse_mf_category (in category_var varchar(10))
 	begin
