@@ -150,3 +150,23 @@ create or replace procedure browse_mf_category (in date_var date)
 		group by cp.price asc;
 	end;
 	/
+	
+-- TRIGGERS
+create or replace trigger on_insert_allocation
+	before insert on ALLOCATION
+	for each row
+	when (new.p_date >= DATEADD(d, -30, GETDATE()))
+	begin insert into ALLOCATION values (:new.allocation_no, :new.p_date);
+	end;
+	/
+
+-- **************    CHECK    *******************
+create or replace trigger on_insert_log
+	after insert on TRXLOG
+	for each row
+	when (action = 'deposit')
+	begin -- I DONT KNOW WHAT GOES HERE
+	end;
+/
+
+commit;
