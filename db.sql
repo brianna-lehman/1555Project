@@ -18,26 +18,16 @@ drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
 
--- Mutual funds needed (string is invalid if not listed)
-create domain mutfund_name as varchar(30)
-	check (value in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
-					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
-					'aggressive-stocks', 'international-markets-stocks'));
-
--- Categories for the mutual funds
-create domain category_check as varchar2(10)
-	check (value in ('fixed', 'bonds', 'stocks', 'mixed'));
-
-create domain trx_action as varchar2(10)
-	check (value in ('deposit', 'sell', 'buy'));
-
-
 create table MUTUALFUND (
 	symbol varchar2(20),
-	name mutfund_name,
+	name varchar2(30),
 	description varchar2(100),
-	category category_check,
+	category varchar2(10),
 	c_date date,
+	constraint mutfund_name check (name in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
+					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
+					'aggressive-stocks', 'international-markets-stocks')),
+	constraint category_check check (category in ('fixed', 'bonds', 'stocks', 'mixed')),
 	constraint pk_mutualfund primary key(symbol) deferrable initially immediate
 );
 
@@ -94,10 +84,11 @@ create table TRXLOG (
 	login varchar2(10),
 	symbol varchar2(20),
 	t_date date,
-	action trx_action,
+	action varchar2(10),
 	num_shares int,
 	price float(2),
 	amount float(2),
+	constraint trx_action check (value in ('deposit', 'sell', 'buy')), 
 	constraint pk_trxlog primary key(trans_id) deferrable initially immediate,
 	constraint fk_trxlog_cust foreign key(login)
 		references CUSTOMER(login) deferrable initially immediate,
@@ -164,7 +155,7 @@ create or replace trigger on_insert_allocation
 create or replace trigger on_insert_log
 	after insert on TRXLOG
 	for each row
-	when (action = 'deposit')
+	when (new.action = 'deposit')
 	begin -- I DONT KNOW WHAT GOES HERE
 	end;
 /
