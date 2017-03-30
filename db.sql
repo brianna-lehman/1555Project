@@ -24,8 +24,8 @@ create table MUTUALFUND (
 	description varchar2(100),
 	category varchar2(10),
 	c_date date,
-	constraint mutfund_name check (name in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds'
-					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks'
+	constraint mutfund_name check (name in ('money-market', 'real-estate', 'short-termbonds', 'long-term-bonds',
+					'balance-bonds-stocks', 'social-responsibility-bonds-stocks', 'general-stocks',
 					'aggressive-stocks', 'international-markets-stocks')),
 	constraint category_check check (category in ('fixed', 'bonds', 'stocks', 'mixed')),
 	constraint pk_mutualfund primary key(symbol) deferrable initially immediate
@@ -88,7 +88,7 @@ create table TRXLOG (
 	num_shares int,
 	price float(2),
 	amount float(2),
-	constraint trx_action check (value in ('deposit', 'sell', 'buy')), 
+	constraint trx_action check (action in ('deposit', 'sell', 'buy')), 
 	constraint pk_trxlog primary key(trans_id) deferrable initially immediate,
 	constraint fk_trxlog_cust foreign key(login)
 		references CUSTOMER(login) deferrable initially immediate,
@@ -114,8 +114,8 @@ create table MUTUALDATE (
 
 create view browse_mf_name as
 	select *
-	from MUTUALFUND
-	group by name asc;
+	from MUTUALFUND mf
+	group by mf.name asc;
 
 create view all_customer_data as
 	select o.shares, mf.symbol, mf.name, mf.description, 
@@ -124,6 +124,12 @@ create view all_customer_data as
 		 OWNS o NATURAL JOIN
 		 MUTUALFUND mf NATURAL JOIN 
 		 CLOSINGPRICE cp;
+
+create view customer_prefrences as 
+	select *
+	from CUSTOMER c NATURAL JOIN
+		 ALLOCATION a NATURAL JOIN
+		 PREFERS p;
 
 create or replace procedure browse_mf_category (in category_var varchar(10))
 	begin
