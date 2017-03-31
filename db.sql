@@ -12,6 +12,7 @@ drop table MUTUALDATE cascade constraints;
 purge recyclebin;
 
 -- REDO CHECKSSSS
+-- Table listing the information of a variety of mutual funds, categorzied appropriately
 create table MUTUALFUND (
 	symbol varchar2(20),
 	name varchar2(30),
@@ -25,6 +26,7 @@ create table MUTUALFUND (
 	constraint pk_mutualfund primary key(symbol) deferrable initially immediate
 );
 
+-- Tracks the closing prices of the mutual funds
 create table CLOSINGPRICE (
 	symbol varchar2(20),
 	price float(2),
@@ -34,6 +36,7 @@ create table CLOSINGPRICE (
 		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
+-- Stores unique customer information
 create table CUSTOMER (
 	login varchar2(10),
 	name varchar2(20),
@@ -44,6 +47,7 @@ create table CUSTOMER (
 	constraint pk_customer primary key(login) deferrable initially immediate
 );
 
+-- Stores unique administrator information
 create table ADMINISTRATOR (
 	login varchar2(10),
 	name varchar2(20),
@@ -53,6 +57,7 @@ create table ADMINISTRATOR (
 	constraint pk_administrator primary key(login) deferrable initially immediate
 );
 
+-- Holds allocation information
 create table ALLOCATION (
 	allocation_no int,
 	login varchar2(10),
@@ -62,6 +67,7 @@ create table ALLOCATION (
 		references CUSTOMER(login) deferrable initially immediate
 );
 
+-- Holds the current preferences of a user
 create table PREFERS (
 	allocation_no int,
 	symbol varchar2(20),
@@ -73,7 +79,7 @@ create table PREFERS (
 		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
-
+-- log used to track every transaction done under an account
 create table TRXLOG (
 	trans_id int,
 	login varchar2(10),
@@ -92,6 +98,7 @@ create table TRXLOG (
 		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
+-- Information of the mutual funds owned by a user
 create table OWNS(
 	login varchar2(10),
 	symbol varchar(20),
@@ -103,6 +110,7 @@ create table OWNS(
 		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
+-- Holds the date
 create table MUTUALDATE (
 	c_date date,
 	constraint pk_mutdate primary key(c_date) deferrable initially immediate
