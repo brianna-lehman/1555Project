@@ -20,9 +20,9 @@ create table MUTUALFUND (
 	category varchar2(10),
 	c_date date,
 	constraint mutfund_name check (name in ('money-market', 'real-estate') and category = 'fixed'
-								or name in ('short-term-bonds', 'long-term-bonds') and category = 'bonds'
-								or name in ('balance-bonds-stocks', 'social-responsibility-bonds-stocks') and category = 'mixed'
-								or name in ('general-stocks', 'aggressive-stocks', 'international-markets-stocks') and category = 'stocks'),
+					or name in ('short-term-bonds', 'long-term-bonds') and category = 'bonds'
+					or name in ('balance-bonds-stocks', 'social-responsibility-bonds-stocks') and category = 'mixed'
+					or name in ('general-stocks', 'aggressive-stocks', 'international-markets-stocks') and category = 'stocks'),
 	constraint pk_mutualfund primary key(symbol) deferrable initially immediate
 );
 
