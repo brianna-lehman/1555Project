@@ -147,6 +147,8 @@ create or replace procedure browse_mf_category (in date_var date)
 		group by cp.price asc;
 	end;
 	/
+
+-- write something that adds up all the % in prefers so that they == 0
 	
 -- TRIGGERS
 create or replace trigger on_insert_allocation
