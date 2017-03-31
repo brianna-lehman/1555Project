@@ -1,10 +1,3 @@
--- ***********************************************************************************************************
---  NOTES:
---  - Ask if views are needed in the first phase. If so, where would we need them
---  - Ask about contraint needed in ALLOCATION for 30 day requirement. How do you approach it?
---  - Where do we need to use functions and/or procedures
--- ************************************************************************************************************
-
 
 drop table MUTUALFUND cascade constraints;
 drop table CLOSINGPRICE cascade constraints;
@@ -18,6 +11,7 @@ drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
 
+-- REDO CHECKSSSS
 create table MUTUALFUND (
 	symbol varchar2(20),
 	name varchar2(30),
@@ -79,6 +73,7 @@ create table PREFERS (
 		references MUTUALFUND(symbol) deferrable initially immediate
 );
 
+
 create table TRXLOG (
 	trans_id int,
 	login varchar2(10),
@@ -88,6 +83,7 @@ create table TRXLOG (
 	num_shares int,
 	price float(2),
 	amount float(2),
+	-- Makes a check to make sure the action is one of the three listed: deposit, sell, buy
 	constraint trx_action check (action in ('deposit', 'sell', 'buy')), 
 	constraint pk_trxlog primary key(trans_id) deferrable initially immediate,
 	constraint fk_trxlog_cust foreign key(login)
@@ -125,12 +121,15 @@ create view all_customer_data as
 		 MUTUALFUND mf NATURAL JOIN 
 		 CLOSINGPRICE cp;
 
+-- Temporarily lists all the information from the CUSTOMER relation and ALLOCATION relation
+-- without duplicate information
 create view customer_prefrences as 
 	select *
 	from CUSTOMER c NATURAL JOIN
 		 ALLOCATION a NATURAL JOIN
 		 PREFERS p;
-
+		 
+-- Procedure used to .....
 create or replace procedure browse_mf_category (in category_var varchar(10))
 	begin
 		select *
@@ -139,6 +138,7 @@ create or replace procedure browse_mf_category (in category_var varchar(10))
 	end;
 	/
 
+-- Procedure used to ... 
 create or replace procedure browse_mf_category (in date_var date)
 	begin
 		select mf.symbol, mf.name, mf.description, mf.category, mf.c_date
@@ -150,7 +150,7 @@ create or replace procedure browse_mf_category (in date_var date)
 
 -- write something that adds up all the % in prefers so that they == 0
 	
--- TRIGGERS
+-- Turn this into a procedure (make sure to list assumption that 30 day check was used insteaad of one month)
 create or replace trigger on_insert_allocation
 	before insert on ALLOCATION
 	for each row
@@ -160,6 +160,9 @@ create or replace trigger on_insert_allocation
 	/
 
 -- **************    CHECK    *******************
+-- Trigger set to insert buy transcations following the deposit insert into log
+-- when a deposit is made, it is assumed that the deposit money is going towards
+-- a buy to the customers mutual funds (the ones that preferenced)
 create or replace trigger on_insert_log
 	after insert on TRXLOG
 	for each row
