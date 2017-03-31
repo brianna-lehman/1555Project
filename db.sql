@@ -150,6 +150,9 @@ create or replace procedure browse_mf_category (in date_var date)
 	/
 
 -- write something that adds up all the % in prefers so that they == 0
+-- Hey Bri, make sure that a check of the distribution percentages == 100%
+-- after a preference change is made (maybe use a procedure?)
+-- just so you know I'm still do the 30 day check
 	
 -- Turn this into a procedure (make sure to list assumption that 30 day check was used insteaad of one month)
 create or replace trigger on_insert_allocation
