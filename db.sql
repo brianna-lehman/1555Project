@@ -11,7 +11,6 @@ drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
 
--- REDO CHECKSSSS
 -- Table listing the information of a variety of mutual funds, categorzied appropriately
 create table MUTUALFUND (
 	symbol varchar2(20),
@@ -68,6 +67,9 @@ create table ALLOCATION (
 );
 
 -- Holds the current preferences of a user
+-- Update: there will be a check in Milestone 2 making sure that it has been 30 days
+-- (or a month) to update the preferenes, but also so that the preference changes
+-- with the distributions equal 100%
 create table PREFERS (
 	allocation_no int,
 	symbol varchar2(20),
@@ -120,9 +122,11 @@ create table MUTUALDATE (
 create view browse_mf_name as
 	select *
 	from MUTUALFUND mf
-	group by mf.name asc;
+	order by mf.name asc;
 
 -- Temporarily lists the current mutual funds of the customer
+-- *************************************************
+-- PROBLEM HERE-- ASK TA
 create view all_customer_data as
 	select o.shares, mf.symbol, mf.name, mf.description, 
 			mf.category, mf.c_date, cp.price, cp.p_date
@@ -159,20 +163,6 @@ create or replace procedure browse_mf_category (in date_var date)
 	end;
 	/
 
--- write something that adds up all the % in prefers so that they == 0
--- Hey Bri, make sure that a check of the distribution percentages == 100%
--- after a preference change is made (maybe use a procedure?)
--- just so you know I'm still do the 30 day check
-	
--- Turn this into a procedure (make sure to list assumption that 30 day check was used insteaad of one month)
-create or replace trigger on_insert_allocation
-	before insert on ALLOCATION
-	for each row
-	when (new.p_date >= DATEADD(d, -30, GETDATE()))
-	begin insert into ALLOCATION values (:new.allocation_no, :new.p_date);
-	end;
-	/
-
 -- **************    CHECK    *******************
 -- Trigger set to insert buy transcations following the deposit insert into log
 -- when a deposit is made, it is assumed that the deposit money is going towards
@@ -181,7 +171,10 @@ create or replace trigger on_insert_log
 	after insert on TRXLOG
 	for each row
 	when (new.action = 'deposit')
-	begin -- I DONT KNOW WHAT GOES HERE
+	begin
+		insert into TRXLOG values (:new.trans_id, :new.login, :new.symbol, :new.t_date, :new.action,
+					 :new.num_shares, :new.price, :new.amount)
+		-- do an insert with buy here somewhere??
 	end;
 /
 
