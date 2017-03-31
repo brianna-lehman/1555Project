@@ -116,11 +116,13 @@ create table MUTUALDATE (
 	constraint pk_mutdate primary key(c_date) deferrable initially immediate
 );
 
+-- Temporarily lists all the mutual funds by name
 create view browse_mf_name as
 	select *
 	from MUTUALFUND mf
 	group by mf.name asc;
 
+-- Temporarily lists the current mutual funds of the customer
 create view all_customer_data as
 	select o.shares, mf.symbol, mf.name, mf.description, 
 			mf.category, mf.c_date, cp.price, cp.p_date
