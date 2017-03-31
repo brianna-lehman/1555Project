@@ -119,7 +119,7 @@ create table MUTUALDATE (
 );
 
 -- Temporarily lists all the mutual funds by name
-create view browse_mf_name as
+create or replace view browse_mf_name as
 	select *
 	from MUTUALFUND mf
 	order by mf.name asc;
@@ -127,17 +127,17 @@ create view browse_mf_name as
 -- Temporarily lists the current mutual funds of the customer
 -- *************************************************
 -- PROBLEM HERE-- ASK TA
-create view all_customer_data as
-	select o.shares, mf.symbol, mf.name, mf.description, 
-			mf.category, mf.c_date, cp.price, cp.p_date
-	from CUSTOMER c NATURAL JOIN 
-		 OWNS o NATURAL JOIN
-		 MUTUALFUND mf NATURAL JOIN 
-		 CLOSINGPRICE cp;
+create or replace view all_customer_data as
+	select shares, symbol, name, description, 
+			category, c_date, price, p_date
+	from CUSTOMER NATURAL JOIN 
+		 OWNS NATURAL JOIN
+		 MUTUALFUND NATURAL JOIN 
+		 CLOSINGPRICE;
 
 -- Temporarily lists all the information from the CUSTOMER relation and ALLOCATION relation
 -- without duplicate information
-create view customer_prefrences as 
+create or replace view customer_prefrences as 
 	select *
 	from CUSTOMER c NATURAL JOIN
 		 ALLOCATION a NATURAL JOIN
