@@ -125,8 +125,6 @@ create or replace view browse_mf_name as
 	order by mf.name asc;
 
 -- Temporarily lists the current mutual funds of the customer
--- *************************************************
--- PROBLEM HERE-- ASK TA
 create or replace view all_customer_data as
 	select shares, symbol, name, description, 
 			category, c_date, price, p_date
@@ -163,7 +161,7 @@ create or replace procedure browse_mf_category (in date_var date)
 	end;
 	/
 
--- **************    CHECK    *******************
+-- **************    DOES NOT WORK    *******************
 -- Trigger set to insert buy transcations following the deposit insert into log
 -- when a deposit is made, it is assumed that the deposit money is going towards
 -- a buy to the customers mutual funds (the ones that preferenced)
@@ -172,10 +170,30 @@ create or replace trigger on_insert_log
 	for each row
 	when (new.action = 'deposit')
 	begin
-		insert into TRXLOG values (:new.trans_id, :new.login, :new.symbol, :new.t_date, :new.action,
-					 :new.num_shares, :new.price, :new.amount)
-		-- do an insert with buy here somewhere??
+		-- the code below will be included into this trigger. this trigger is an 
+		-- attempt of getting the information needed to update the shares bought
+		-- using the preferences listed by the user in the mutual funds
 	end;
 /
 
+
+-- this cursor is used to get the different preferences and its distributions
+declare
+	cursor prefer_cursor is
+		select allocation_no, symbol, percentage
+		from ALLOCATION natural joins PREFERS;
+ 	prefer_record ALLOCATION%rowtype;
+begin
+	if not prefer_cursor%isopen
+		then open prefer_cursor;
+	end if;
+	loop
+		fetch prefer_cursor into prefer_rec;
+		exit when prefer_record&notfound;
+		-- this area will contain a function that deposits the money 
+		-- based on the percentage of the fund
+	end loop;
+	close prefer_record;
+end;
+	
 commit;
