@@ -11,7 +11,7 @@ drop table MUTUALDATE cascade constraints;
 
 purge recyclebin;
 
--- Table listing the information of a variety of mutual funds, categorzied appropriately
+-- Table listing the information of a variety of mutual funds, categorized appropriately
 create table MUTUALFUND (
 	symbol varchar2(20),
 	name varchar2(30),
