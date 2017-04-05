@@ -73,6 +73,11 @@ public class BetterFuture {
 				String keyword2 = keywords_split[1];
 
 				// pass keyword1 and keyword2 as arguments to procedure 
+				// and use % to search for them in description of mutual funds
+			}
+			else if (menuChoice == 3) {
+				System.out.println("How much would you like to invest? ");
+				float invest = kb.nextFloat();
 			}
 		}
 	}
