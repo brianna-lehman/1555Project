@@ -1,7 +1,8 @@
 public class BetterFuture {
+
+	public static Sanner kb = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		Scanner kb = new Scanner(System.in);
 		System.out.println("What type of user are you?");
 		System.out.println("\t1.\tAdministrator\n\t2.\tCustomer");
 		String user = kb.next();
@@ -18,9 +19,10 @@ public class BetterFuture {
 	}
 
 	public static void customerInterface() {
-		Scanner kb = new Scanner(System.in);
 		int menuChoice = 0;
 		int menuChoice = 0;
+
+		login();
 
 		while (menuChoice < 9) {
 			System.out.println("Choose one of the following:");
@@ -93,5 +95,20 @@ public class BetterFuture {
 			System.out.println("Type in the number corresponding to your choice.");
 			return -1;
 		}
+	}
+
+	public static Customer login() {
+		System.out.println("Login name: ");
+		String login = kb.next();
+		System.out.println("Password: ");
+		String password = kb.next();
+
+		// find tuple in CUSTOMER where CUSTOMER.login = login
+		// if CUSTOMER.password != password || tuple == null
+			// System.out.println("Incorrect input.");
+			// System.exit(1);
+
+		return new Customer(login, name, email, address, balance);
+
 	}
 }
