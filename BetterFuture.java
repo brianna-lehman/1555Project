@@ -80,14 +80,7 @@ public class BetterFuture {
 				menuChoice = checkInput();
 				if (menuChoice == -1) continue;
 
-				if (menuChoice == 1) {
-					System.out.print("How many shares would you like to buy? ");
-					int shares = kb.nextInt();
-				}
-				else if (menuChoice == 2) {
-					System.out.print("How much would you like to spend? ");
-					float price = kb.nextFloat();
-				}
+				customer.buy(symbol, menuChoice);
 			}
 		}
 	}
@@ -103,7 +96,7 @@ public class BetterFuture {
 		}
 	}
 
-	public static Customer login() {
+	public static Customer customerLogin() {
 		System.out.println("Login name: ");
 		String login = kb.next();
 		System.out.println("Password: ");
