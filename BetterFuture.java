@@ -20,12 +20,11 @@ public class BetterFuture {
 
 	public static void customerInterface() {
 		int menuChoice = 0;
-		int menuChoice = 0;
 
-		login();
+		Customer cust = customerLogin();
 
 		while (menuChoice < 9) {
-			System.out.println("Choose one of the following:");
+			System.out.println("\nChoose one of the following:");
 			System.out.println("\t1.\tBrowse mutual funds");
 			System.out.println("\t2.\tSearch mutual funds by text");
 			System.out.println("\t3.\tInvest");
@@ -68,7 +67,7 @@ public class BetterFuture {
 				}
 			}
 			else if (menuChoice == 2) {
-				System.out.println("Search for up to two words in the mutual funds, separated by a space: ");
+				System.out.print("Search for up to two words in the mutual funds, separated by a space: ");
 				String keywords = kb.nextLine();
 				String[] keywords_split = keywords.split(" ");
 				String keyword1 = keywords_split[0];
@@ -78,8 +77,38 @@ public class BetterFuture {
 				// and use % to search for them in description of mutual funds
 			}
 			else if (menuChoice == 3) {
-				System.out.println("How much would you like to invest? ");
+				System.out.print("How much would you like to invest? ");
 				float invest = kb.nextFloat();
+			}
+			else if (menuChoice == 4) {
+				System.out.print("What is the mutual fund symbol? ");
+				String symbol = kb.next();
+				System.out.print("How many shares would you like to sell? ");
+				int shares = kb.nextInt();
+
+				// create a join table of MUTUALFUND and CLOSINGPRICE where symbol = input symbol
+				// get value of price*shares
+				// create a trigger where: 
+					// before insert on CUSTOMER
+					// when the balance is about to be changed
+					// make balance += price*shares
+					// insert new balance into table
+			}
+			else if (menuChoice == 5) {
+				System.out.print("What is the mutual fund symbol? ");
+				String symbol = kb.next();
+				System.out.println("Would you like to buy by \n\t1.)\tnumber of shares \n\t2.)\tprice amount");
+				menuChoice = checkInput();
+				if (menuChoice == -1) continue;
+
+				if (menuChoice == 1) {
+					System.out.print("How many shares would you like to sell? ");
+					int shares = kb.nextInt();
+				}
+				else if (menuChoice == 2) {
+					System.out.print("How much would you like to spend? ");
+					float price = kb.nextFloat();
+				}
 			}
 		}
 	}
@@ -87,9 +116,7 @@ public class BetterFuture {
 	public static void checkInput() {
 		try {
 			int input = kb.nextInt();
-
 			if (input < 1) input = -1;
-
 			return input;
 		} catch (IllegalArgumentException iae) {
 			System.out.println("Type in the number corresponding to your choice.");
