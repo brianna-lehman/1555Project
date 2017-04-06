@@ -21,7 +21,7 @@ public class BetterFuture {
 	public static void customerInterface() {
 		int menuChoice = 0;
 
-		Customer cust = customerLogin();
+		Customer customer = customerLogin();
 
 		while (menuChoice < 9) {
 			System.out.println("\nChoose one of the following:");
@@ -48,23 +48,7 @@ public class BetterFuture {
 				menuChoice = checkInput();
 				if (menuChoice == -1) continue;
 
-				if (menuChoice == 1) {
-					// print the entire mutual funds table
-				} else if (menuChoice == 2) {
-					System.out.println("Which category? Fixed, bonds, mixed, or stocks?");
-					String category = kb.next();
-					// put category as input into a procedure that prints all mutual funds
-					// with that category
-				} else if (menuChoice == 3) {
-					System.out.print("Type in the date (dd/mm/yyyy): ");
-					String date = kb.next();
-					// put date as input into a procedure that prints all
-					// MUTUALFUND natural join CLOSINGPRICE
-					// with that c_date, ordered by price
-				} else if (menuChoice == 4) {
-					// print entire mutual funds table
-					// ordered by name asc
-				}
+				customer.browse(menuChoice);
 			}
 			else if (menuChoice == 2) {
 				System.out.print("Search for up to two words in the mutual funds, separated by a space: ");
@@ -73,12 +57,13 @@ public class BetterFuture {
 				String keyword1 = keywords_split[0];
 				String keyword2 = keywords_split[1];
 
-				// pass keyword1 and keyword2 as arguments to procedure 
-				// and use % to search for them in description of mutual funds
+				customer.search(keyword1, keyword2);
 			}
 			else if (menuChoice == 3) {
 				System.out.print("How much would you like to invest? ");
 				float invest = kb.nextFloat();
+
+				customer.invest(invest);
 			}
 			else if (menuChoice == 4) {
 				System.out.print("What is the mutual fund symbol? ");
@@ -86,13 +71,7 @@ public class BetterFuture {
 				System.out.print("How many shares would you like to sell? ");
 				int shares = kb.nextInt();
 
-				// create a join table of MUTUALFUND and CLOSINGPRICE where symbol = input symbol
-				// get value of price*shares
-				// create a trigger where: 
-					// before insert on CUSTOMER
-					// when the balance is about to be changed
-					// make balance += price*shares
-					// insert new balance into table
+				customer.sell(symbol, shares);
 			}
 			else if (menuChoice == 5) {
 				System.out.print("What is the mutual fund symbol? ");
@@ -102,7 +81,7 @@ public class BetterFuture {
 				if (menuChoice == -1) continue;
 
 				if (menuChoice == 1) {
-					System.out.print("How many shares would you like to sell? ");
+					System.out.print("How many shares would you like to buy? ");
 					int shares = kb.nextInt();
 				}
 				else if (menuChoice == 2) {
