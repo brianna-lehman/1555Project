@@ -152,7 +152,7 @@ create or replace procedure browse_mf_category (in category_var varchar(10))
 
 -- Procedure used to see all the mutual funds created on a user specified date,
 -- ordered by their current price
-create or replace procedure browse_mf_category (in date_var date)
+create or replace procedure browse_mf_date (in date_var date)
 	begin
 		select mf.symbol, mf.name, mf.description, mf.category, mf.c_date
 		from MUTUALFUND mf NATURAL JOIN CLOSINGPRICE cp

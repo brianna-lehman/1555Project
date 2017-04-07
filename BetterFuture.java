@@ -115,11 +115,20 @@ public class BetterFuture {
 		String login = kb.next();
 		System.out.println("Password: ");
 		String password = kb.next();
+		String real_password;
+		String name;
+		String email;
+		String address;
+		String balance;
 
-		// find tuple in CUSTOMER where CUSTOMER.login = login
-		// if CUSTOMER.password != password || tuple == null
-			// System.out.println("Incorrect input.");
-			// System.exit(1);
+		//** embedded sql **//
+		call check_login(login, real_password, name, email, address, balance);
+		//** embedded sql **//
+
+		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
+			System.out.println("The username or password is incorrect.");
+			System.exit(1);
+		}
 
 		return new Customer(login, name, email, address, balance);
 

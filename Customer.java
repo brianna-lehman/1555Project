@@ -15,14 +15,20 @@ public class Customer {
 
 	public void browse(int choice) {
 
-		if (choice == 1) {
-			// print entire mutual funds table
+		// prints the entire mutual fund table if the user types in a number that isn't an option
+		if (choice <= 1 || choice > 4) {
+			//** sql **//
+			select *
+			from MUTUALFUND;
+			//** sql **//
 		}
 		else if (choice == 2) {
 			System.out.println("Which category? Fixed, bonds, mixed, or stocks?");
 			String category = kb.next();
+
 			// put category as input into a procedure that prints all mutual funds
 			// with that category
+			call browse_mf_category(category);
 		}
 		else if (choice == 3) {
 			System.out.print("Type in the date (dd/mm/yyyy): ");
@@ -30,17 +36,20 @@ public class Customer {
 			// put date as input into a procedure that prints all
 			// MUTUALFUND natural join CLOSINGPRICE
 			// with that c_date, ordered by price
+
+			//** how to turn input into a date data type? **//
+			call browse_mf_date(date);
 		}
 		else if (choice == 4) {
 			// print entire mutual funds table
 			// ordered by name asc
+
+			// call the browse_mf_name view
 		}
-		else // print some error message and exit
 	}
 
 	public void search(String key1, String key2) {
-		// pass keyword1 and keyword2 as arguments to procedure 
-		// and use % to search for them in description of mutual funds
+		call keyword_search(key1, key2);
 	}
 
 	public void invest(float amount) {
