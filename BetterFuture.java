@@ -82,6 +82,20 @@ public class BetterFuture {
 
 				customer.buy(symbol, menuChoice);
 			}
+			else if (menuChoice == 6) {
+				//** this doesn't do anything! **/
+				customer.conditionInvest();
+			}
+			else if (menuChoice == 7) {
+				//** I'm not sure what this is supposed to do! **/
+				customer.changePreference();
+			}
+			else if (menuChoice == 8) {
+				System.out.print("Specify the date (yyyy-mm-dd)? ");
+				String date = kb.next();
+
+				customer.printPortfolio(String date);
+			}
 		}
 	}
 
