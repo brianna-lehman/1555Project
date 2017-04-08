@@ -155,7 +155,7 @@ create or replace procedure browse_mf_category (in category_var varchar(10))
 create or replace procedure browse_mf_date (in date_var date)
 	begin
 		select mf.symbol, mf.name, mf.description, mf.category, mf.c_date
-		from MUTUALFUND mf NATURAL JOIN CLOSINGPRICE cp
+		from mutualfund_price mf
 		where mf.c_date = date_var
 		group by cp.price asc;
 	end;

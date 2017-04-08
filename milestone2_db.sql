@@ -35,6 +35,13 @@ create or replace procedure total_shares_price (in symbol varchar2(20), in num_s
 	end;
 	/
 
+create or replace procedure num_shares_from_input_price (in symbol varchar2(20), in total_price float(2),
+														out num_shares int, out single_price float(2))
+	begin
+		select total_price/mf.price into num_shares, mf.price into single_price
+		from mutualfund_price mf
+		where mf.symbol = symbol
+
 create or replace trigger increase_customer_balance
 	before insert on TRXLOG
 	for each row
@@ -42,6 +49,17 @@ create or replace trigger increase_customer_balance
 	begin
 		update CUSTOMER
 		set balance = balance+total_price
+		where login = user_login -- how to get this user_login information into the trigger?
+	end;
+/
+
+create or replace trigger decrease_customer_balance
+	before insert on TRXLOG
+	for each row
+	when (new.action = 'buy')
+	begin
+		update CUSTOMER
+		set balance = balance - total_price
 		where login = user_login -- how to get this user_login information into the trigger?
 	end;
 /
