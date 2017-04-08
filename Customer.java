@@ -57,13 +57,14 @@ public class Customer {
 	}
 
 	public void sell(String symbol, int shares) {
-		// create a join table of MUTUALFUND and CLOSINGPRICE where symbol = input symbol
-			// get value of price*shares
-			// try to insert entry into trxlog
-			// create a trigger where: 
-				// before insert on trxlog
-				// when action == sell
-				// make balance += price*shares in the customer table
+		float total_price;
+		float price_of_one_share;
+
+		//** sql **//
+		call total_shares_price(symbol, shares, total_price, price_of_one_share);
+		insert into TRXLOG values(trans_id++, login, symbol, ?date?, 'sell', shares, price_of_one_share, total_price);
+		// this will trigger 'increase_customer_balance'
+		//** sql **//
 	}
 
 	public void buy(String symbol, int choice) {
