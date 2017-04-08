@@ -1,10 +1,12 @@
 -- THIS FILE IS JUST TO KEEP TRACK OF DATABASE THINGS THAT GET CREATED DURING MILESTONE 2
 -- we'll put everything together later
 
+-- a view that gets used when you have to know the mutual fund and it's closing price
 create or replace view mutualfund_price as
 	select *
 	from MUTUALFUND natural join CLOSINGPRICE;
 
+-- returning all the information for a single customer at login
 create or replace procedure check_login (in user_login varchar2(10), 
 										out password varchar2(10), out name varchar2(20), 
 										out email varchar2(30), out address varchar2(30), 
@@ -18,6 +20,7 @@ create or replace procedure check_login (in user_login varchar2(10),
 	end;
 	/
 
+-- searches the mutual fund description for keywords
 create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar2(10))
 	begin
 		select *
@@ -26,6 +29,8 @@ create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar
 	end;
 	/
 
+-- given the mutual fund symbol and number of shares looking to be bought
+-- find the price of one of those shares and the total price of all the shares
 create or replace procedure total_shares_price (in symbol varchar2(20), in num_shares int, 
 												out total_price float(2), out single_price float(2))
 	begin
@@ -35,6 +40,8 @@ create or replace procedure total_shares_price (in symbol varchar2(20), in num_s
 	end;
 	/
 
+-- given the mutual fund symbol and total price looking to be spent
+-- find the price of one share and the maximum number of shares that can be bought for that price
 create or replace procedure num_shares_from_input_price (in symbol varchar2(20), in total_price float(2),
 														out num_shares int, out single_price float(2))
 	begin
@@ -42,6 +49,7 @@ create or replace procedure num_shares_from_input_price (in symbol varchar2(20),
 		from mutualfund_price mf
 		where mf.symbol = symbol
 
+-- trigger to increase the customer balance when a 'sell' action is inserted into the trxlog table
 create or replace trigger increase_customer_balance
 	before insert on TRXLOG
 	for each row
@@ -53,6 +61,7 @@ create or replace trigger increase_customer_balance
 	end;
 /
 
+-- trigger to decrease the customer balance when a 'buy' action is inserted into the trxlog table
 create or replace trigger decrease_customer_balance
 	before insert on TRXLOG
 	for each row
