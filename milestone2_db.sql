@@ -48,6 +48,18 @@ create or replace procedure num_shares_from_input_price (in symbol varchar2(20),
 		select total_price/mf.price into num_shares, mf.price into single_price
 		from mutualfund_price mf
 		where mf.symbol = symbol
+	end;
+	/
+
+-- returns the symbol of the mutual fund to be invested in
+-- and the percentage of the user's investment that should be invested in this mutual fund
+create or replace procedure specific_customer_preferences (in user_login varchar2(10))
+	begin
+		select symbol, percentage
+		from customer_prefrences
+		where login = user_login
+	end;
+	/
 
 -- trigger to increase the customer balance when a 'sell' action is inserted into the trxlog table
 create or replace trigger increase_customer_balance

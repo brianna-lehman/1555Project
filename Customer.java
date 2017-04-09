@@ -4,6 +4,7 @@ public class Customer {
 	String email
 	String address
 	float balance
+	int trans_id;
 
 	/** Constructor */
 	public Customer(String login, String name, String email, String address, float balance) {
@@ -12,6 +13,7 @@ public class Customer {
 		this.email = email;
 		this.address = address;
 		this.balance = balance;
+		trans_id = 0;
 	}
 
 	/** The user inputs a choice from a text menu, 
@@ -64,8 +66,15 @@ public class Customer {
 		//** sql **//
 	}
 
-	public void invest(float amount) {
+	// a certain percentage of the amount is invested in buying a specific mutual fund
+	// this doesn't check to make sure all the possible mutual funds can be bought 
+	public void invest(float total_amount) {
+		//** sql **//
+		insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit');
+		// this triggers 'on_insert_log'
+		//** sql **//
 
+		balance -= total_amount;
 	}
 
 	/** calls a procedure that returns the price of one share and the total price of all shares sold
@@ -97,7 +106,7 @@ public class Customer {
 			float price_of_one_share;
 
 			//** sql **//
-			// find the price of a single share of the mutual fund and the total price of all the shares
+			// finds the price of a single share of the mutual fund and the total price of all the shares
 			call total_shares_price(symbol, shares, total_price, price_of_one_share);
 			//** sql **//
 

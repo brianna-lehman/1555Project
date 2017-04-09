@@ -173,6 +173,11 @@ create or replace trigger on_insert_log
 		-- the code below will be included into this trigger. this trigger is an 
 		-- attempt of getting the information needed to update the shares bought
 		-- using the preferences listed by the user in the mutual funds
+
+		-- for every tuple in the table from specific_customer_preferences
+			-- int amount_to_invest = amount * percentage
+			-- call procedure num_shares_from_input_price(symbol, amount_to_invest, int num_shares, int share_price)
+			-- insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', num_shares, share_price, amount_to_invest);
 	end;
 /
 

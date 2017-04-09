@@ -63,6 +63,7 @@ public class BetterFuture {
 				System.out.print("How much would you like to invest? ");
 				float invest = kb.nextFloat();
 
+				//** this doesn't do anything! **/
 				customer.invest(invest);
 			}
 			else if (menuChoice == 4) {
