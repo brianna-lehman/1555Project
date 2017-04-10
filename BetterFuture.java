@@ -147,7 +147,7 @@ public class BetterFuture {
 	} // end customerInterface()
 
 	// checks for valid user input
-	public static void checkInput() {
+	public static int checkInput() {
 		try {
 			int input = kb.nextInt();
 			if (input < 1) input = -1;
