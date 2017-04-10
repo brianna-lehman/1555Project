@@ -51,7 +51,7 @@ create or replace procedure num_shares_from_input_price (in symbol varchar2(20),
 	end;
 	/
 
--- returns the symbol of the mutual fund to be invested in
+-- returns the symbol of the mutual funds this customer prefers to invest in
 -- and the percentage of the user's investment that should be invested in this mutual fund
 create or replace procedure specific_customer_preferences (in user_login varchar2(10))
 	begin
