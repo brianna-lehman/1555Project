@@ -1,26 +1,64 @@
 public class BetterFuture {
 
 	public static Sanner kb = new Scanner(System.in);
-	
+
 	public static void main(String[] args) {
 		System.out.println("What type of user are you?");
 		System.out.println("\t1.\tAdministrator\n\t2.\tCustomer");
 		String user = kb.next();
-
+		// checks if user is an administrator
 		if (user.compareToIgnoreCase("administrator") == 0) {
 			adminInterface();
 		}
+		// checks if user is a returning customer
 		else if (user.compareToIgnoreCase("customer") == 0) {
 			customerInterface();
 		}
 		else {
 			System.out.println("Incorrect input.");
 		}
-	}
+	} // end main()
 
+	// interface used for the administrator
+	public static void adminInterface() {
+		int menuChoice = 0;
+		Admin admin = adminLogin();
+
+		while (menuChoice < 5) {
+			System.out.println("\nChoose one of the following:");
+			System.out.println("\t1.\tNew user registration");
+			System.out.println("\t2.\tUpdate share quotes for a day");
+			System.out.println("\t3.\tAdd a new mutual fund");
+			System.out.println("\t4.\tUpdate the time and date");
+			System.out.println("\t5.\tView current statistics");
+			System.out.println("\t6.\tExit");
+			// determines input
+			menuChoice = checkInput();
+			if (menuChoice == -1) continue;
+			// different menu options
+			switch (menuChoice) {
+				case 1:
+					System.out.println("Please enter the following information:");
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					break;
+				default:
+					System.out.println("Type in a number corresponding to your choice.");
+			} // end switch
+		} // end while
+	} // end adminInterface()
+
+	// interface used for customer
 	public static void customerInterface() {
 		int menuChoice = 0;
-
 		Customer customer = customerLogin();
 
 		while (menuChoice < 9) {
@@ -34,22 +72,23 @@ public class BetterFuture {
 			System.out.println("\t7.\tChange allocation preferences");
 			System.out.println("\t8.\tSee customer portfolio");
 			System.out.println("\t9.\tExit");
-
+			// determines user input
 			menuChoice = checkInput();
 			if (menuChoice == -1) continue;
-
+			// if user wants to browse mutual funds
 			if (menuChoice == 1) {
 				System.out.println("Would you like to...");
 				System.out.println("\t1.\tSee all mutual funds");
 				System.out.println("\t2.\tSee mutual funds by category");
 				System.out.println("\t3.\tSee mutual funds sorted by highest price for a specific date");
 				System.out.println("\t4.\tSee mutual funds sorted alphabetically");
-
+				// retrieves user input
 				menuChoice = checkInput();
 				if (menuChoice == -1) continue;
 
 				customer.browse(menuChoice);
 			}
+			// if user wants to search for mutual funds
 			else if (menuChoice == 2) {
 				System.out.print("Search for up to two words in the mutual funds, separated by a space: ");
 				String keywords = kb.nextLine();
@@ -59,6 +98,7 @@ public class BetterFuture {
 
 				customer.search(keyword1, keyword2);
 			}
+			// if user wants to invest
 			else if (menuChoice == 3) {
 				System.out.print("How much would you like to invest? ");
 				float invest = kb.nextFloat();
@@ -66,6 +106,7 @@ public class BetterFuture {
 				//** this doesn't do anything! **/
 				customer.invest(invest);
 			}
+			// if user would like to sell shares
 			else if (menuChoice == 4) {
 				System.out.print("What is the mutual fund symbol? ");
 				String symbol = kb.next();
@@ -74,6 +115,7 @@ public class BetterFuture {
 
 				customer.sell(symbol, shares);
 			}
+			// if user would like to buy shares
 			else if (menuChoice == 5) {
 				System.out.print("What is the mutual fund symbol? ");
 				String symbol = kb.next();
@@ -83,24 +125,28 @@ public class BetterFuture {
 
 				customer.buy(symbol, menuChoice);
 			}
+			// if user wants to invest with conditions
 			else if (menuChoice == 6) {
 				//** this doesn't do anything! **/
 				customer.conditionInvest();
 			}
+			// if user wants to change allocation preferences
 			else if (menuChoice == 7) {
 				System.out.println("What is the allocation number of the preference you'd like to change? ");
 				int number = kb.nextInt();
 				customer.changePreference(number);
 			}
+			// if user wants to see there porfolio
 			else if (menuChoice == 8) {
 				System.out.print("Specify the date (yyyy-mm-dd)? ");
 				String date = kb.next();
 
 				customer.printPortfolio(String date);
 			}
-		}
-	}
+		} // end while
+	} // end customerInterface()
 
+	// checks for valid user input
 	public static void checkInput() {
 		try {
 			int input = kb.nextInt();
@@ -110,8 +156,9 @@ public class BetterFuture {
 			System.out.println("Type in the number corresponding to your choice.");
 			return -1;
 		}
-	}
+	} // end checkInput()
 
+	// Retrieves customer login information
 	public static Customer customerLogin() {
 		System.out.println("Login name: ");
 		String login = kb.next();
@@ -134,5 +181,5 @@ public class BetterFuture {
 
 		return new Customer(login, name, email, address, balance);
 
-	}
+	} // end customerLogin()
 }
