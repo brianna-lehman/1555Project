@@ -61,6 +61,13 @@ create or replace procedure specific_customer_preferences (in user_login varchar
 	end;
 	/
 
+-- prints the customer's profile information
+create or replace procedure customer_profile (in today_date date, in user_login varchar2(10))
+		begin
+			select txl.symbol, txl.price, txl.num_shares, mf.price*trx.num_shares as current_value
+			from TRXLOG txl natural join mutualfund_price mf
+			where txl.t_date = today_date and txl.login = user_login
+
 -- trigger to increase the customer balance when a 'sell' action is inserted into the trxlog table
 create or replace trigger increase_customer_balance
 	before insert on TRXLOG

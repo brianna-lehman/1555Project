@@ -148,13 +148,11 @@ public class Customer {
 
 	}
 
-	public void changePreference() {
+	public void changePreference(int alloc_number) {
 
 	}
 
 	public void printPortfolio(String date) {
-		// 	select trx.symbol, trx.price, trx.num_shares, mf.price*trx.num_shares as current_value
-		//	from TRXLOG txl natural join mutualfund_price mf
-		//	where txl.t_date = date and txl.login = customer.login
+		call customer_profile(?date?, login);
 	}
 }

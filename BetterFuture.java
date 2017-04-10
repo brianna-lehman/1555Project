@@ -88,8 +88,9 @@ public class BetterFuture {
 				customer.conditionInvest();
 			}
 			else if (menuChoice == 7) {
-				//** I'm not sure what this is supposed to do! **/
-				customer.changePreference();
+				System.out.println("What is the allocation number of the preference you'd like to change? ");
+				int number = kb.nextInt();
+				customer.changePreference(number);
 			}
 			else if (menuChoice == 8) {
 				System.out.print("Specify the date (yyyy-mm-dd)? ");
