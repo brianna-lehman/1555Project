@@ -197,7 +197,13 @@ public class BetterFuture {
 					break;
 				// VIEW CURRENT STATISTICS
 				case 5:
-					
+					int monthNum;
+					int top;
+					System.out.println("How many past months of information would you like to see? ");
+					monthNum = kb.next();
+					System.out.println("Please enter the top number of highest volume categories and
+															investors you would like to see.");
+					admin.printStats(monthNum, top);
 					break;
 				// EXIT
 				case 6:

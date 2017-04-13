@@ -69,4 +69,7 @@ public class Admin {
     System.out.println("The time and date have been updated successfully!");
   } // end updateTime(String, String)
 
+  public void printStats(int monthNum, int topK) {
+    
+  } // end printStats(int, int)
 }
