@@ -8,9 +8,9 @@ create or replace view mutualfund_price as
 
 -- returning all the information for a single customer at login
 create or replace procedure check_login (in user_login varchar2(10), 
-										out password varchar2(10), out name varchar2(20), 
-										out email varchar2(30), out address varchar2(30), 
-										out balance float(2))
+							out password varchar2(10), out name varchar2(20), 
+							out email varchar2(30), out address varchar2(30), 
+							out balance float(2))
 	begin
 		select c.password into password, c.name into name, 
 		c.email into email, c.address into address,
@@ -18,7 +18,7 @@ create or replace procedure check_login (in user_login varchar2(10),
 		from CUSTOMER c
 		where login = user_login;
 	end;
-	/
+/
 
 -- searches the mutual fund description for keywords
 create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar2(10))
@@ -27,7 +27,7 @@ create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar
 		from MUTUALFUND
 		where description like %key1% or description like %key2%
 	end;
-	/
+/
 
 -- given the mutual fund symbol and number of shares looking to be bought
 -- find the price of one of those shares and the total price of all the shares
@@ -38,7 +38,7 @@ create or replace procedure total_shares_price (in symbol varchar2(20), in num_s
 		from mutualfund_price mf
 		where mf.symbol = symbol
 	end;
-	/
+/
 
 -- given the mutual fund symbol and total price looking to be spent
 -- find the price of one share and the maximum number of shares that can be bought for that price
@@ -47,9 +47,9 @@ create or replace procedure num_shares_from_input_price (in symbol varchar2(20),
 	begin
 		select total_price/mf.price into num_shares, mf.price into single_price
 		from mutualfund_price mf
-		where mf.symbol = symbol
+		where mf.symbol = symbol;
 	end;
-	/
+/
 
 -- returns the symbol of the mutual funds this customer prefers to invest in
 -- and the percentage of the user's investment that should be invested in this mutual fund
@@ -57,16 +57,35 @@ create or replace procedure specific_customer_preferences (in user_login varchar
 	begin
 		select symbol, percentage
 		from customer_prefrences
-		where login = user_login
+		where login = user_login;
 	end;
-	/
+/
 
 -- prints the customer's profile information
 create or replace procedure customer_profile (in today_date date, in user_login varchar2(10))
-		begin
-			select txl.symbol, txl.price, txl.num_shares, mf.price*trx.num_shares as current_value
-			from TRXLOG txl natural join mutualfund_price mf
-			where txl.t_date = today_date and txl.login = user_login
+	begin
+		-- prints the symbol, price, and number of shares bought on a specific date
+		-- as well as the current price of the mutual fund
+		-- !but not the cost_value because I don't know what that is!
+		select  txl.symbol, txl.price, txl.num_shares, 
+				mf.price as current_value
+		from TRXLOG txl natural join mutualfund_price mf
+		where txl.t_date = today_date and txl.login = user_login;
+
+		-- finds the yield of the customer's portfolio by subtracting the mutual funds
+		-- that were bought from the mutual funds that were sold
+		select sum(price) - (select sum(price)
+							 from TRXLOG txl
+							 where login = user_login and action = 'buy';) as yield
+		from TRXLOG txl
+		where login = user_login and action = 'sell';
+
+		-- prints the total value of all money deposited or withdrawn by the customer
+		select sum(price) as total_value
+		from TRXLOG txl
+		where login = user_login;
+	end;
+/
 
 -- trigger to increase the customer balance when a 'sell' action is inserted into the trxlog table
 create or replace trigger increase_customer_balance

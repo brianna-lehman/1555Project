@@ -152,6 +152,7 @@ public class Customer {
 
 	}
 
+	/** Calls a procedure that prints all transactions that this user has implemented */
 	public void printPortfolio(String date) {
 		call customer_profile(?date?, login);
 	}
