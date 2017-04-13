@@ -92,8 +92,8 @@ create or replace procedure customer_profile (in today_date date, in user_login 
 		-- finds the yield of the customer's portfolio by subtracting the mutual funds
 		-- that were bought from the mutual funds that were sold
 		select sum(price) - (select sum(price)
-					from TRXLOG txl
-					where login = user_login and action = 'buy';) as yield
+							from TRXLOG txl
+							where login = user_login and action = 'buy';) as yield
 		from TRXLOG txl
 		where login = user_login and action = 'sell';
 
