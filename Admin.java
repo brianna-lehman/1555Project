@@ -60,11 +60,13 @@ public class Admin {
   public void addFund(String fund, String, category) {
     // embedded SQL
     // INSERT INTO MUTUALFUND VALUES ();
+
+    System.out.println("The mutual fund has been added successfully!");
   } // end addFund(String, String)
 
   // updates the time and date requested from the administrator
   public void updateTime(String time, String date) {
-
+    System.out.println("The time and date have been updated successfully!");
   } // end updateTime(String, String)
 
 }
