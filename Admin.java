@@ -56,6 +56,15 @@ public class Admin {
     System.out.println("The shares have been updated successfully!");
   } // end updateShare(String)
 
+  // inserts a new mutual fund
+  public void addFund(String fund, String, category) {
+    // embedded SQL
+    // INSERT INTO MUTUALFUND VALUES ();
+  } // end addFund(String, String)
 
+  // updates the time and date requested from the administrator
+  public void updateTime(String time, String date) {
+
+  } // end updateTime(String, String)
 
 }

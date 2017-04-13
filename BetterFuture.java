@@ -152,16 +152,52 @@ public class BetterFuture {
 					break;
 				// ADD A NEW MUTUAL FUND
 				case 3:
+					String fund;
+					String category;
+					int cat;
 					System.out.println("What mutual fund would you like to add? ");
-
+					fund = kb.next();
+					System.out.println("What categroy will this fund be put under: ");
+					System.out.println("\t1. Bonds\n\t2. Stocks\n\t3. Fixed\n\t4. Mixed");
+					cat = kb.next();
+					// Possibly do category check here instead of the SQL level?
+					switch(cat) {
+						case 1:
+								category = "bonds";
+								admin.addFund(fund, category);
+								break;
+						case 2:
+								category = "stocks";
+								admin.addFund(fund, category);
+								break;
+						case 3:
+								category = "fixed";
+								admin.addFund(fund, category);
+								break;
+						case 4:
+								category = "mixed";
+								admin.addFund(fund, category);
+								break;
+						default:
+								System.out.println("Error: Please try again.");
+					} // end switch
 					break;
 				// UPDATE THE TIME AND DATE
 				case 4:
-
+					String time;
+					String date;
+					System.out.println("Here is the current time and date");
+					// Embedded SQL code
+					// Display time and date
+					System.out.println("What would you like to update the time to: ");
+					time = kb.next();
+					System.out.println("What would you like to upate the date to: ");
+					date = kb.next();
+					admin.updateTime(time, date);
 					break;
 				// VIEW CURRENT STATISTICS
 				case 5:
-
+					
 					break;
 				// EXIT
 				case 6:
