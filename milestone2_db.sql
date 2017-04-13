@@ -11,11 +11,28 @@ create or replace procedure check_login (in user_login varchar2(10),
 							out password varchar2(10), out name varchar2(20), 
 							out email varchar2(30), out address varchar2(30), 
 							out balance float(2))
+
+create or replace procedure check_login_customer (in user_login varchar2(10),
+						out password varchar2(10), out name varchar2(20),
+						out email varchar2(30), out address varchar2(30),
+						out balance float(2))
 	begin
-		select c.password into password, c.name into name, 
+		select c.password into password, c.name into name,
 		c.email into email, c.address into address,
-		c.balance into balance 
+		c.balance into balance
 		from CUSTOMER c
+		where login = user_login;
+	end;
+/
+
+-- returning all the information for a single administrator at login
+create or replace procedure check_login_admin (in user_login varchar2(10),
+						out password varchar2(10), out name varchar2(20),
+						out email varchar2(30), out address varchar2(30))
+	begin
+		select c.password into password, c.name into name,
+		c.email into email, c.address into address
+		from ADMINISTRATOR c
 		where login = user_login;
 	end;
 /
@@ -31,8 +48,8 @@ create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar
 
 -- given the mutual fund symbol and number of shares looking to be bought
 -- find the price of one of those shares and the total price of all the shares
-create or replace procedure total_shares_price (in symbol varchar2(20), in num_shares int, 
-												out total_price float(2), out single_price float(2))
+create or replace procedure total_shares_price (in symbol varchar2(20), in num_shares int,
+						out total_price float(2), out single_price float(2))
 	begin
 		select mf.price*mf.shares into total_price, mf.price into single_price
 		from mutualfund_price mf
@@ -43,7 +60,7 @@ create or replace procedure total_shares_price (in symbol varchar2(20), in num_s
 -- given the mutual fund symbol and total price looking to be spent
 -- find the price of one share and the maximum number of shares that can be bought for that price
 create or replace procedure num_shares_from_input_price (in symbol varchar2(20), in total_price float(2),
-														out num_shares int, out single_price float(2))
+							out num_shares int, out single_price float(2))
 	begin
 		select total_price/mf.price into num_shares, mf.price into single_price
 		from mutualfund_price mf
@@ -75,8 +92,8 @@ create or replace procedure customer_profile (in today_date date, in user_login 
 		-- finds the yield of the customer's portfolio by subtracting the mutual funds
 		-- that were bought from the mutual funds that were sold
 		select sum(price) - (select sum(price)
-							 from TRXLOG txl
-							 where login = user_login and action = 'buy';) as yield
+					from TRXLOG txl
+					where login = user_login and action = 'buy';) as yield
 		from TRXLOG txl
 		where login = user_login and action = 'sell';
 
