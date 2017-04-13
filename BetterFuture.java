@@ -37,18 +37,90 @@ public class BetterFuture {
 			if (menuChoice == -1) continue;
 			// different menu options
 			switch (menuChoice) {
+				// NEW USER REGISTRATION
 				case 1:
-					System.out.println("Please enter the following information:");
+					boolean ifSuccess = false;
+					System.out.println("Is the new user and administrator? (Y/N)");
+					char isAdmin = kb.next();
+					isAdmin = Character.toUpperCase(isAdmin);
+					if (isAdmin == 'Y') {
+						// insert new login into Admin db
+						System.out.println("Please enter the following information:"):
+						System.out.println("New Login: ");
+						String adminLog = kb.next();
+						// confirm login is okay
+						while (admin.checkLogin(adminLog, true) != true) {
+							System.out.println("This login already exists. Please enter a new one.");
+							System.out.print("New Login: \n");
+							adminLog = kb.next();
+						} // end while
+						System.out.print("Password: ");
+						String adminPass = kb.next();
+						System.out.println("Full Name: ");
+						String adminName = kb.next();
+						System.out.println("Email: ");
+						String adminEmail = kb.next();
+						System.out.println("Address: ");
+						String adminAddress = kb.next();
+
+						// embedded sql
+						// insert function will be included here
+						// INSERT INTO ADMINISTRATOR(adminLog, adminName, adminEmail,
+						//													 adminAddress, adminPass);
+
+						System.out.println("\nAdministrator data has been stored successfully!\n");
+					}
+					// If the new user is not an admin
+					else {
+						System.out.println("Please enter the following information:"):
+						System.out.println("New Login: ");
+						String customerLog = kb.next();
+						// confirm login is okay
+						while (admin.checkLogin(adminLog, false) != true) {
+							System.out.println("This login already exists. Please enter a new one.");
+							System.out.print("New Login: \n");
+							customerLog = kb.next();
+						} // end while
+						System.out.print("Password: ");
+						String customerPass = kb.next();
+						System.out.println("Full Name: ");
+						String customerName = kb.next();
+						System.out.println("Email: ");
+						String customerEmail = kb.next();
+						System.out.println("Address: ");
+						String customerAddress = kb.next();
+
+						// embedded sql
+						// insert function will be included here
+						// INSERT INTO CUSTOMER(customerLog, customerName, customerEmail,
+					  //											customerAddress, customerPass, NULL);
+
+						System.out.println("\nCustomer data has been stored successfully!\n");
+					}
 					break;
+				// UPDATE SHARE QUOTES FOR THE DAY
 				case 2:
+					
 					break;
+				// ADD A NEW MUTUAL FUND
 				case 3:
+
 					break;
+				// UPDATE THE TIME AND DATE
 				case 4:
+
 					break;
+				// VIEW CURRENT STATISTICS
 				case 5:
+
 					break;
+				// EXIT
 				case 6:
+					// not sure if programming is ending or getting taken back to orignal
+					// home menu
+					// if exit program entirely
+					System.out.println("Good-bye!");
+					System.exit(0);
 					break;
 				default:
 					System.out.println("Type in a number corresponding to your choice.");
@@ -171,7 +243,7 @@ public class BetterFuture {
 		String balance;
 
 		//** embedded sql **//
-		call check_login(login, real_password, name, email, address, balance);
+		call check_login_customer(login, real_password, name, email, address, balance);
 		//** embedded sql **//
 
 		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
@@ -182,4 +254,28 @@ public class BetterFuture {
 		return new Customer(login, name, email, address, balance);
 
 	} // end customerLogin()
+
+	// Retrieves admin login information
+	public static Admin adminLogin() {
+		System.out.println("Login name: ");
+		String login = kb.next();
+		System.out.println("Password: ");
+		String password = kb.next();
+		String real_password;
+		String name;
+		String email;
+		String address;
+
+		//** embedded sql **//
+		call check_login_admin(login, real_password, name, email, address);
+		//** embedded sql **//
+
+		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
+			System.out.println("The username or password is incorrect or you are not authorized
+													login in as an administrator.");
+			System.exit(1);
+		}
+
+		return new Admin(login, name, email, address);
+	} // end adminLogin()
 }

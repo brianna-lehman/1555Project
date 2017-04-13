@@ -7,15 +7,27 @@ create or replace view mutualfund_price as
 	from MUTUALFUND natural join CLOSINGPRICE;
 
 -- returning all the information for a single customer at login
-create or replace procedure check_login (in user_login varchar2(10), 
-										out password varchar2(10), out name varchar2(20), 
-										out email varchar2(30), out address varchar2(30), 
+create or replace procedure check_login_customer (in user_login varchar2(10),
+										out password varchar2(10), out name varchar2(20),
+										out email varchar2(30), out address varchar2(30),
 										out balance float(2))
 	begin
-		select c.password into password, c.name into name, 
+		select c.password into password, c.name into name,
 		c.email into email, c.address into address,
-		c.balance into balance 
+		c.balance into balance
 		from CUSTOMER c
+		where login = user_login;
+	end;
+	/
+
+-- returning all the information for a single administrator at login
+create or replace procedure check_login_admin (in user_login varchar2(10),
+										out password varchar2(10), out name varchar2(20),
+										out email varchar2(30), out address varchar2(30))
+	begin
+		select c.password into password, c.name into name,
+		c.email into email, c.address into address
+		from ADMINISTRATOR c
 		where login = user_login;
 	end;
 	/
@@ -31,7 +43,7 @@ create or replace procedure keyword_search(in key1 varchar2(10), in key2 varchar
 
 -- given the mutual fund symbol and number of shares looking to be bought
 -- find the price of one of those shares and the total price of all the shares
-create or replace procedure total_shares_price (in symbol varchar2(20), in num_shares int, 
+create or replace procedure total_shares_price (in symbol varchar2(20), in num_shares int,
 												out total_price float(2), out single_price float(2))
 	begin
 		select mf.price*mf.shares into total_price, mf.price into single_price
