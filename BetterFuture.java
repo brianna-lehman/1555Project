@@ -100,10 +100,59 @@ public class BetterFuture {
 					break;
 				// UPDATE SHARE QUOTES FOR THE DAY
 				case 2:
-					
+					String choice = "";
+					System.out.println("Which mutual fund would you like to update the
+															share quotes for?");
+					System.out.println("\t1. Money Market\n\t2. Real-Estate\n\t3. Short-term Bonds\n\t
+																4. Long-term Bonds\n\t5. Balance Bonds Stocks\n\t
+																6. Social Responsibility Bonds Stocks\n\t7. General Stocks\n\t
+																8. Aggressive Stocks\n\t9. International Market Stocks\n\n");
+					int fundChoice = kb.next();
+					// proceeds depending on mutual fund choice
+					switch(fundChoice) {
+						case 1:
+								choice = "money-market";
+								admin.updateShare(choice);
+								break;
+						case 2;
+								choice = "real-estate";
+								admin.updateShare(choice);
+								break;
+						case 3;
+								choice = "short-term-bonds";
+								admin.updateShare(choice);
+								break;
+						case 4;
+								choice = "long-term-bonds";
+								admin.updateShare(choice);
+								break;
+						case 5;
+								choice = "balance-bonds-stocks";
+								admin.updateShare(choice);
+								break;
+						case 6;
+								choice = "social-responsibility-bonds-stocks";
+								admin.updateShare(choice);
+								break;
+						case 7:
+								choice = "general-stocks";
+								admin.updateShare(choice);
+								break;
+						case 8:
+								choice = "aggressive-stocks";
+								admin.updateShare(choice);
+								break;
+						case 9:
+								choice = "international-markets-stocks";
+								admin.updateShare(choice);
+								break;
+						default:
+								System.out.println("Error: Please try again");
+					} // end switch
 					break;
 				// ADD A NEW MUTUAL FUND
 				case 3:
+					System.out.println("What mutual fund would you like to add? ");
 
 					break;
 				// UPDATE THE TIME AND DATE

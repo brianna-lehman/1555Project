@@ -1,11 +1,11 @@
 import java.sql.*;
+import java.util.*;
 
 public class Admin {
   String login;
   String name;
   String email;
   String address;
-  Statement st;
 
   // Parameterized constructor
   public Admin(String login, String name, String email, String address) {
@@ -38,6 +38,24 @@ public class Admin {
       // return true;
     }
   } // end checkLogin
+
+  // updates the shares in the specified mutual fund
+  public void updateShare(String choice) {
+    Scanner kb = new Scanner(System.in);
+    System.out.println("Here are the following share quotes for this mutual fund:");
+    // Embedded SQL code
+    // select *
+    // from CLOSINGPRICE
+    // where name = choice
+    System.out.print("What price would you like to update the shares to: $");
+    float updatePrice = kb.next();
+
+    // updates the information
+    // embedded SQL code here
+    // UPDATE ()
+    System.out.println("The shares have been updated successfully!");
+  } // end updateShare(String)
+
 
 
 }
