@@ -45,7 +45,7 @@ public class BetterFuture {
 					isAdmin = Character.toUpperCase(isAdmin);
 					if (isAdmin == 'Y') {
 						// insert new login into Admin db
-						System.out.println("Please enter the following information:"):
+						System.out.println("Please enter the following information:");
 						System.out.println("New Login: ");
 						String adminLog = kb.next();
 						// confirm login is okay
@@ -72,7 +72,7 @@ public class BetterFuture {
 					}
 					// If the new user is not an admin
 					else {
-						System.out.println("Please enter the following information:"):
+						System.out.println("Please enter the following information:");
 						System.out.println("New Login: ");
 						String customerLog = kb.next();
 						// confirm login is okay
@@ -101,12 +101,11 @@ public class BetterFuture {
 				// UPDATE SHARE QUOTES FOR THE DAY
 				case 2:
 					String choice = "";
-					System.out.println("Which mutual fund would you like to update the
-															share quotes for?");
-					System.out.println("\t1. Money Market\n\t2. Real-Estate\n\t3. Short-term Bonds\n\t
-																4. Long-term Bonds\n\t5. Balance Bonds Stocks\n\t
-																6. Social Responsibility Bonds Stocks\n\t7. General Stocks\n\t
-																8. Aggressive Stocks\n\t9. International Market Stocks\n\n");
+					System.out.println("Which mutual fund would you like to update the share quotes for?");
+					System.out.println("\t1. Money Market\n\t2. Real-Estate\n\t3. Short-term Bonds\n\t"
+																+"4. Long-term Bonds\n\t5. Balance Bonds Stocks\n\t"
+																+"6. Social Responsibility Bonds Stocks\n\t7. General Stocks\n\t"
+																+"8. Aggressive Stocks\n\t9. International Market Stocks\n\n");
 					int fundChoice = kb.next();
 					// proceeds depending on mutual fund choice
 					switch(fundChoice) {
@@ -114,23 +113,23 @@ public class BetterFuture {
 								choice = "money-market";
 								admin.updateShare(choice);
 								break;
-						case 2;
+						case 2:
 								choice = "real-estate";
 								admin.updateShare(choice);
 								break;
-						case 3;
+						case 3:
 								choice = "short-term-bonds";
 								admin.updateShare(choice);
 								break;
-						case 4;
+						case 4:
 								choice = "long-term-bonds";
 								admin.updateShare(choice);
 								break;
-						case 5;
+						case 5:
 								choice = "balance-bonds-stocks";
 								admin.updateShare(choice);
 								break;
-						case 6;
+						case 6:
 								choice = "social-responsibility-bonds-stocks";
 								admin.updateShare(choice);
 								break;
@@ -201,8 +200,8 @@ public class BetterFuture {
 					int top;
 					System.out.println("How many past months of information would you like to see? ");
 					monthNum = kb.next();
-					System.out.println("Please enter the top number of highest volume categories and
-															investors you would like to see.");
+					System.out.println("Please enter the top number of highest volume categories and "
+															+"investors you would like to see.");
 					admin.printStats(monthNum, top);
 					break;
 				// EXIT
@@ -304,7 +303,7 @@ public class BetterFuture {
 				System.out.print("Specify the date (yyyy-mm-dd)? ");
 				String date = kb.next();
 
-				customer.printPortfolio(String date);
+				customer.printPortfolio(date);
 			}
 		} // end while
 	} // end customerInterface()
@@ -362,8 +361,8 @@ public class BetterFuture {
 		//** embedded sql **//
 
 		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
-			System.out.println("The username or password is incorrect or you are not authorized
-													login in as an administrator.");
+			System.out.println("The username or password is incorrect or you are not authorized"
+													+" login in as an administrator.");
 			System.exit(1);
 		}
 
