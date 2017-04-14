@@ -13,7 +13,7 @@ public class Customer {
 		this.email = email;
 		this.address = address;
 		this.balance = balance;
-		trans_id = 0;
+		trans_id = /*select MAX(trans_id) from TRXLOG*/+1;
 	}
 
 	/** The user inputs a choice from a text menu, 
