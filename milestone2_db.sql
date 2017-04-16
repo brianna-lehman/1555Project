@@ -7,11 +7,6 @@ create or replace view mutualfund_price as
 	from MUTUALFUND natural join CLOSINGPRICE;
 
 -- returning all the information for a single customer at login
-create or replace procedure check_login (in user_login varchar2(10), 
-							out password varchar2(10), out name varchar2(20), 
-							out email varchar2(30), out address varchar2(30), 
-							out balance float(2))
-
 create or replace procedure check_login_customer (in user_login varchar2(10),
 						out password varchar2(10), out name varchar2(20),
 						out email varchar2(30), out address varchar2(30),

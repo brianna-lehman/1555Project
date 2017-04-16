@@ -1,8 +1,29 @@
+import java.util.*;
+import java.sql.*;
+
 public class BetterFuture {
+
+	private Connection connection;
+	private Statement statement;
+	private ResultSet resultSet;
 
 	public static Sanner kb = new Scanner(System.in);
 
 	public static void main(String[] args) {
+
+		String username = "bml49";
+		String password = 3985224;
+
+		try {
+			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
+			String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
+			connection = DriverManager.getConnection(url, username, password);
+		}
+		catch(Exception ex) {
+			System.out.println("Error connecting to database.");
+			ex.printStackTrace();
+		}
+
 		System.out.println("What type of user are you?");
 		System.out.println("\t1.\tAdministrator\n\t2.\tCustomer");
 		String user = kb.next();
