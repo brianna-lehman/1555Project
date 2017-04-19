@@ -6,6 +6,7 @@ public class BetterFuture {
 	private Connection connection;
 	private Statement statement;
 	private ResultSet resultSet;
+	private String query;
 
 	public static Sanner kb = new Scanner(System.in);
 
@@ -347,22 +348,36 @@ public class BetterFuture {
 		String login = kb.next();
 		System.out.println("Password: ");
 		String password = kb.next();
-		String real_password;
 		String name;
 		String email;
 		String address;
-		String balance;
+		float balance;
 
-		//** embedded sql **//
-		call check_login_customer(login, real_password, name, email, address, balance);
-		//** embedded sql **//
+		try {
+			statement = connection.createStatement();
+			query = "select * from CUSTOMER where login = ? and password = ?";
+			PreparedStatement updateStatement = connection.prepareStatement(query);
+			updateStatement.setString(1, login);
+			updateStatement.setString(2, password);
+			resultSet = updateStatement.executeQuery();
 
-		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
-			System.out.println("The username or password is incorrect.");
-			System.exit(1);
+			if (resultSet.next()) {
+				name = resultSet.getString("name");
+				email = resultSet.getString("email");
+				address = resultSet.getString("address");
+				balance = resultSet.getFloat("balance");
+			}
+			else {
+				System.out.println("The username or password is incorrect.");
+				System.exit(0);
+			}
+
+			return new Customer(login, name, email, address, balance);
 		}
-
-		return new Customer(login, name, email, address, balance);
+		catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(0);
+		}
 
 	} // end customerLogin()
 

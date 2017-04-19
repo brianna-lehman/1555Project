@@ -178,9 +178,15 @@ create or replace trigger on_insert_log
 			-- int amount_to_invest = amount * percentage
 			-- call procedure num_shares_from_input_price(symbol, amount_to_invest, int num_shares, int share_price)
 			-- insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', num_shares, share_price, amount_to_invest);
+		open specific_customer_preferences_c;
 	end;
 /
 
+declare 
+	cursor specific_customer_preferences_c (in user_login) is
+		select symbol, percentage
+		from customer_prefrences
+		where login = user_login;
 
 -- this cursor is used to get the different preferences and its distributions
 declare

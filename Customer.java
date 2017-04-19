@@ -1,10 +1,18 @@
+import java.util.*;
+import java.sql.*;
+
 public class Customer {
-	String login
-	String name
-	String email
-	String address
-	float balance
-	int trans_id;
+	private static String login
+	private static String name
+	private static String email
+	private static String address
+	private static float balance
+	// int trans_id;
+	public static Scanner kb = new Scanner(System.in);
+	private Connection connection;
+	private Statement statement;
+	private ResultSet res;
+	private String query;
 
 	/** Constructor */
 	public Customer(String login, String name, String email, String address, float balance) {
@@ -13,7 +21,18 @@ public class Customer {
 		this.email = email;
 		this.address = address;
 		this.balance = balance;
-		trans_id = /*select MAX(trans_id) from TRXLOG*/+1;
+		// trans_id = /*select MAX(trans_id) from TRXLOG*/+1;
+
+		try {
+			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
+			String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
+			connection = DriverManager.getConnection(url, "bml49", "3985224");
+		}
+		catch(Exception ex) {
+			System.out.println("Error connecting to database.");
+			ex.printStackTrace();
+		}
+
 	}
 
 	/** The user inputs a choice from a text menu, 
@@ -23,10 +42,16 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			//** sql **//
-			select *
-			from MUTUALFUND;
-			//** sql **//
+			PreparedStatement ps = connection.PreparedStatement("select * from MUTUALFUND");
+			res = ps.executeQuery()
+			System.out.println("Symbol\tName\tDescription\tCategory");
+
+			while (res.next()) {
+				System.out.print(res.getString("symbol")+"\t");
+				System.out.print(res.getString("name")+"\t");
+				System.out.print(res.getString("description")+"\t");
+				System.out.print(res.getString("category")+"\t");
+			}
 		}
 
 		// prints all the mutual funds of a specific category
