@@ -42,7 +42,7 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			PreparedStatement ps = connection.PreparedStatement("select * from MUTUALFUND");
+			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND");
 			res = ps.executeQuery()
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
@@ -60,8 +60,18 @@ public class Customer {
 			String category = kb.next();
 
 			//** sql **//
-			// put category as input into a procedure that prints all mutual funds with that category
-			call browse_mf_category(category);
+			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
+			ps.setString(1, category);
+
+			res = ps.executeQuery()
+			System.out.println("Symbol\tName\tDescription\tCategory");
+
+			while (res.next()) {
+				System.out.print(res.getString("symbol")+"\t");
+				System.out.print(res.getString("name")+"\t");
+				System.out.print(res.getString("description")+"\t");
+				System.out.print(res.getString("category")+"\t");
+			}
 			//** sql **//
 		}
 
