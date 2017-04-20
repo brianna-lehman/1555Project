@@ -32,7 +32,6 @@ public class Customer {
 			System.out.println("Error connecting to database.");
 			ex.printStackTrace();
 		}
-
 	}
 
 	/** The user inputs a choice from a text menu, 
@@ -43,7 +42,7 @@ public class Customer {
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
 			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND");
-			res = ps.executeQuery()
+			res = ps.executeQuery();
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
 			while (res.next()) {
@@ -84,7 +83,7 @@ public class Customer {
 			java.sql.Date date = new java.sql.Date(df.parse(date_input).getTime());
 
 			//** sql **//
-			query = "select * from mutualfund_price mf where mf.c_date = ? order by cp.price asc";
+			query = "select * from MUTUALFUND natural join CLOSINGPRICE where c_date = ? order by price asc";
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setDate(1, date);
 
@@ -120,7 +119,21 @@ public class Customer {
 	 */ 
 	public void search(String key1, String key2) {
 		//** sql **//
-		call keyword_search(key1, key2);
+		query = "select * from MUTUALFUND where description like %?% or description like %?%";
+		PreparedStatement ps = connection.prepareStatement(query);
+		ps.setString(1, key1);
+		ps.setString(2, key2);
+
+		res = ps.executeQuery();
+
+		System.out.println("Symbol\tName\tDescription\tCategory");
+
+		while (res.next()) {
+			System.out.print(res.getString("symbol")+"\t");
+			System.out.print(res.getString("name")+"\t");
+			System.out.print(res.getString("description")+"\t");
+			System.out.print(res.getString("category")+"\t");
+		}
 		//** sql **//
 	}
 
