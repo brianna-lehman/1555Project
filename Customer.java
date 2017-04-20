@@ -63,7 +63,7 @@ public class Customer {
 			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
 			ps.setString(1, category);
 
-			res = ps.executeQuery()
+			res = ps.executeQuery();
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
 			while (res.next()) {
@@ -78,17 +78,40 @@ public class Customer {
 		// prints all the mutual funds that were created on a user specified day, ordered by price ascending
 		else if (choice == 3) {
 			System.out.print("Type in the date (dd/mm/yyyy): ");
-			String date = kb.next();
+			String date_input = kb.next();
+
+			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd/mm/yyyy");
+			java.sql.Date date = new java.sql.Date(df.parse(date_input).getTime());
 
 			//** sql **//
-			//** ?how to turn input into a date data type? **//
-			call browse_mf_date(date);
+			query = "select * from mutualfund_price mf where mf.c_date = ? order by cp.price asc";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setDate(1, date);
+
+			res = ps.executeQuery();
+
+			System.out.println("Symbol\tName\tDescription\tCategory");
+
+			while (res.next()) {
+				System.out.print(res.getString("symbol")+"\t");
+				System.out.print(res.getString("name")+"\t");
+				System.out.print(res.getString("description")+"\t");
+				System.out.print(res.getString("category")+"\t");
 			//** sql **//
 		}
 
 		// prints all the mutual funds in order by name ascending
 		else if (choice == 4) {
-			// ?how to call the browse_mf_name view?
+			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
+			res = ps.executeQuery();
+
+			System.out.println("Symbol\tName\tDescription\tCategory");
+
+			while (res.next()) {
+				System.out.print(res.getString("symbol")+"\t");
+				System.out.print(res.getString("name")+"\t");
+				System.out.print(res.getString("description")+"\t");
+				System.out.print(res.getString("category")+"\t");
 		}
 	}
 
