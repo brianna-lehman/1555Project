@@ -182,12 +182,6 @@ create or replace trigger on_insert_log
 	end;
 /
 
-declare 
-	cursor specific_customer_preferences_c (in user_login) is
-		select symbol, percentage
-		from customer_prefrences
-		where login = user_login;
-
 -- this cursor is used to get the different preferences and its distributions
 declare
 	cursor prefer_cursor is
