@@ -8,12 +8,12 @@ public class BetterFuture {
 	private ResultSet resultSet;
 	private String query;
 
-	public static Sanner kb = new Scanner(System.in);
+	public static Scanner kb = new Scanner(System.in);
 
 	public static void main(String[] args) {
 
 		String username = "bml49";
-		String password = 3985224;
+		String password = "3985224";
 
 		try {
 			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
@@ -63,7 +63,7 @@ public class BetterFuture {
 				case 1:
 					boolean ifSuccess = false;
 					System.out.println("Is the new user and administrator? (Y/N)");
-					char isAdmin = kb.next();
+					String isAdmin = kb.next();
 					isAdmin = Character.toUpperCase(isAdmin);
 					if (isAdmin == 'Y') {
 						// insert new login into Admin db
@@ -128,7 +128,7 @@ public class BetterFuture {
 																+"4. Long-term Bonds\n\t5. Balance Bonds Stocks\n\t"
 																+"6. Social Responsibility Bonds Stocks\n\t7. General Stocks\n\t"
 																+"8. Aggressive Stocks\n\t9. International Market Stocks\n\n");
-					int fundChoice = kb.next();
+					int fundChoice = kb.nextInt();
 					// proceeds depending on mutual fund choice
 					switch(fundChoice) {
 						case 1:
@@ -393,7 +393,7 @@ public class BetterFuture {
 		String address;
 
 		//** embedded sql **//
-		call check_login_admin(login, real_password, name, email, address);
+		//call check_login_admin(login, real_password, name, email, address);
 		//** embedded sql **//
 
 		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
