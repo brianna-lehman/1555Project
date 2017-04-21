@@ -8,7 +8,7 @@ public class Customer {
 	private static String address;
 	private static float balance;
 	private static int trans_id;
-	private static java.sql.Date date;
+	private static java.sql.Date currDate;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
 	private Statement statement;
@@ -38,8 +38,8 @@ public class Customer {
 		res = ps.executeQuery();
 		trans_id = res.getInt(1) + 1;
 
-		java.util.Date today = new Date();
-		date = new Date(today.getTime());
+		java.util.Date today = new java.util.Date();
+		currDate = new java.sql.Date(today.getTime());
 	}
 
 	/** The user inputs a choice from a text menu,
@@ -88,7 +88,7 @@ public class Customer {
 			String date_input = kb.next();
 
 			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd/mm/yyyy");
-			java.sql.Date date = new java.sql.Date(df.parse(date_input).getTime());
+			java.sql.Date input_date = new java.sql.Date(df.parse(date_input).getTime());
 
 			//** sql **//
 			query = "select * "+
@@ -96,7 +96,7 @@ public class Customer {
 					"where c_date = ? "+
 					"order by price asc";
 			ps = connection.prepareStatement(query);
-			ps.setDate(1, date);
+			ps.setDate(1, input_date);
 
 			res = ps.executeQuery();
 
@@ -154,7 +154,7 @@ public class Customer {
 	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
-		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(trans_id++, login, date, 'deposit', total_amount)";
+		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(trans_id++, login, currDate, 'deposit', total_amount)";
 		ps = connection.prepareStatement(update);
 		ps.executeUpdate();
 		// this triggers 'on_insert_log'
@@ -170,8 +170,6 @@ public class Customer {
 	public void sell(String symbol, int shares) {
 		float total_price;
 		float price_of_one_share;
-		java.util.Date today = new Date();
-		java.sql.Date date = new Date(today.getTime());
 
 		//** sql **//
 		// call total_shares_price(symbol, shares, total_price, price_of_one_share);
@@ -186,7 +184,7 @@ public class Customer {
 		total_price = res.getInt(1);
 		price_of_one_share = res.getInt(2);
 
-		update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'sell', shares, price_of_one_share, total_price)";
+		update = "insert into TRXLOG values(trans_id++, login, symbol, currDate, 'sell', shares, price_of_one_share, total_price)";
 		ps = connection.prepareStatement(update);
 		ps.executeUpdate();
 		// this will trigger 'increase_customer_balance'
@@ -229,7 +227,7 @@ public class Customer {
 
 				//** sql **//
 				// try to insert an entry into trxlog
-				update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price)";
+				update = "insert into TRXLOG values(trans_id++, login, symbol, currDate, 'buy', shares, price_of_one_share, total_price)";
 				ps = connection.prepareStatement(update);
 				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
@@ -289,8 +287,8 @@ public class Customer {
 				"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
 				"where t_date = ? and login = ?";
 		ps = connection.prepareStatement(query);
-		ps.setDate(input_date);
-		ps.setString(login);
+		ps.setDate(1, input_date);
+		ps.setString(2, login);
 
 		res = ps.executeQuery();
 
