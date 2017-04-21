@@ -28,13 +28,13 @@ public class BetterFuture {
 
 		System.out.println("What type of user are you?");
 		System.out.println("\t1.\tAdministrator\n\t2.\tCustomer");
-		String user = kb.next();
+		int user = kb.nextInt();
 		// checks if user is an administrator
-		if (user.compareToIgnoreCase("administrator") == 0) {
+		if (user == 1) {
 			adminInterface();
 		}
 		// checks if user is a returning customer
-		else if (user.compareToIgnoreCase("customer") == 0) {
+		else if (user == 2) {
 			customerInterface();
 		}
 		else {
@@ -47,7 +47,7 @@ public class BetterFuture {
 		int menuChoice = 0;
 		Admin admin = adminLogin();
 
-		while (menuChoice < 5) {
+		while (menuChoice < 6) {
 			System.out.println("\nChoose one of the following:");
 			System.out.println("\t1.\tNew user registration");
 			System.out.println("\t2.\tUpdate share quotes for a day");
@@ -65,24 +65,27 @@ public class BetterFuture {
 					boolean ifSuccess = false;
 					System.out.println("Is the new user and administrator? (Y/N)");
 					String isAdmin = kb.next();
-					if (isAdmin.charAt(0) == 'Y') {
+					if (isAdmin.charAt(0) == 'Y' || isAdmin.charAt(0) == 'y') {
 						// insert new login into Admin db
 						System.out.println("Please enter the following information:");
-						System.out.println("New Login: ");
+						System.out.print("New Login: ");
 						String adminLog = kb.next();
 						// confirm login is okay
 						while (admin.checkLogin(adminLog, true) != true) {
 							System.out.println("This login already exists. Please enter a new one.");
-							System.out.print("New Login: \n");
+							System.out.print("New Login: ");
 							adminLog = kb.next();
 						} // end while
 						System.out.print("Password: ");
 						String adminPass = kb.next();
-						System.out.println("Full Name: ");
-						String adminName = kb.next();
-						System.out.println("Email: ");
+						System.out.print("First Name: ");
+						String firstName = kb.next();
+						System.out.print("Last Name: ");
+						String lastName = kb.next();
+						String adminName = firstName + " " + lastName;
+						System.out.print("Email: ");
 						String adminEmail = kb.next();
-						System.out.println("Address: ");
+						System.out.print("Address: ");
 						String adminAddress = kb.next();
 
 						// embedded sql
@@ -105,11 +108,14 @@ public class BetterFuture {
 						} // end while
 						System.out.print("Password: ");
 						String customerPass = kb.next();
-						System.out.println("Full Name: ");
-						String customerName = kb.next();
-						System.out.println("Email: ");
+						System.out.print("First Name: ");
+						String firstName = kb.next();
+						System.out.print("Last Name: ");
+						String lastName = kb.next();
+						String customerName = firstName + " " + lastName;
+						System.out.print("Email: ");
 						String customerEmail = kb.next();
-						System.out.println("Address: ");
+						System.out.print("Address: ");
 						String customerAddress = kb.next();
 
 						// embedded sql
@@ -220,9 +226,9 @@ public class BetterFuture {
 				case 5:
 					int monthNum;
 					int top;
-					System.out.println("How many past months of information would you like to see? ");
+					System.out.print("How many past months of information would you like to see? ");
 					monthNum = kb.nextInt();
-					System.out.println("Please enter the top number of highest volume categories and "
+					System.out.print("Please enter the top number of highest volume categories and "
 															+"investors you would like to see.");
 					top = kb.nextInt();
 					admin.printStats(monthNum, top);
@@ -275,12 +281,18 @@ public class BetterFuture {
 			}
 			// if user wants to search for mutual funds
 			else if (menuChoice == 2) {
-				System.out.print("Search for up to two words in the mutual funds, separated by a space: ");
-				String keywords = kb.nextLine();
-				String[] keywords_split = keywords.split(" ");
-				String keyword1 = keywords_split[0];
-				String keyword2 = keywords_split[1];
-
+				String keyword2 = "";
+				System.out.println("Search for up to two words in the mutual funds.");
+				System.out.print("Please enter one word: ");
+				String keyword1 = kb.next();
+				System.out.println("Would you like to enter a another word? (Y/N)");
+				String input = kb.next();
+				if (input.equals("Y") || input.equals("y")) {
+					System.out.print("Please enter another word: ");
+					keyword2 = kb.next();
+				} else {
+					keyword2 = null;
+				}
 				customer.search(keyword1, keyword2);
 			}
 			// if user wants to invest
@@ -323,9 +335,16 @@ public class BetterFuture {
 			}
 			// if user wants to see there porfolio
 			else if (menuChoice == 8) {
-				System.out.print("Specify the date (yyyy-mm-dd)? ");
-				String date = kb.next();
-
+				String date = "";
+				System.out.println("Please enter a date in number format.");
+				System.out.print("Year (yyyy): ");
+				String year = kb.next();
+				System.out.print("Month (mm): ");
+				String month = kb.next();
+				System.out.print("Day (dd): ");
+				String day = kb.next();
+				// Concatenate
+				date = year + "-" + month + "-" + day;
 				customer.printPortfolio(date);
 			}
 		} // end while
