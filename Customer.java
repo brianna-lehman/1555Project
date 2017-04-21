@@ -2,11 +2,11 @@ import java.util.*;
 import java.sql.*;
 
 public class Customer {
-	private static String login
-	private static String name
-	private static String email
-	private static String address
-	private static float balance
+	private static String login;
+	private static String name;
+	private static String email;
+	private static String address;
+	private static float balance;
 	// int trans_id;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
@@ -34,7 +34,7 @@ public class Customer {
 		}
 	}
 
-	/** The user inputs a choice from a text menu, 
+	/** The user inputs a choice from a text menu,
 	 *	based on the choice, a mutual fund table is printed
 	 */
 	public void browse(int choice) {
@@ -97,10 +97,11 @@ public class Customer {
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
 			//** sql **//
+			}
 		}
 
 		// prints all the mutual funds in order by name ascending
-		else if (choice == 4) {
+		else {
 			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
 			res = ps.executeQuery();
 
@@ -111,12 +112,13 @@ public class Customer {
 				System.out.print(res.getString("name")+"\t");
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
+			}
 		}
 	}
 
-	/** calls a procedure that searches descriptions of mutual funds for the user specified keywords 
+	/** calls a procedure that searches descriptions of mutual funds for the user specified keywords
 	 *	?I don't think this prints to the screen?
-	 */ 
+	 */
 	public void search(String key1, String key2) {
 		//** sql **//
 		query = "select * from MUTUALFUND where description like %?% or description like %?%";
@@ -138,7 +140,7 @@ public class Customer {
 	}
 
 	// a certain percentage of the amount is invested in buying a specific mutual fund
-	// this doesn't check to make sure all the possible mutual funds can be bought 
+	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
 		insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit');
@@ -166,7 +168,7 @@ public class Customer {
 		balance += total_price;
 	}
 
-	/** user can chose to buy mutual funds based on number of shares or price */ 
+	/** user can chose to buy mutual funds based on number of shares or price */
 	public void buy(String symbol, int choice) {
 
 		// buying based on shares
@@ -184,7 +186,7 @@ public class Customer {
 			if (total_price > balance) {
 				System.out.println("You don't have enough money to buy this amount of shares.");
 			}
-			else 
+			else
 				balance -= total_price;
 
 				//** sql **//
@@ -201,7 +203,7 @@ public class Customer {
 			int shares;
 			float price_of_one_share;
 
-			if total_price > balance
+			if (total_price > balance)
 				System.out.println("You don't have enough money to buy this amount of shares.");
 			else
 				//** sql **//
