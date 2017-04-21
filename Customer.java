@@ -7,22 +7,16 @@ public class Customer {
 	private static String email
 	private static String address
 	private static float balance
-	// int trans_id;
+	private static int trans_id;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
 	private Statement statement;
 	private ResultSet res;
-	private String query;
+	private String query, update;
+	private PreparedStatement ps;
 
 	/** Constructor */
 	public Customer(String login, String name, String email, String address, float balance) {
-		this.login = login;
-		this.name = name;
-		this.email = email;
-		this.address = address;
-		this.balance = balance;
-		// trans_id = /*select MAX(trans_id) from TRXLOG*/+1;
-
 		try {
 			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 			String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
@@ -32,6 +26,16 @@ public class Customer {
 			System.out.println("Error connecting to database.");
 			ex.printStackTrace();
 		}
+
+		this.login = login;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+		this.balance = balance;
+
+		ps = connection.prepareStatement("select MAX(trans_id) from TRXLOG");
+		res = ps.executeQuery();
+		trans_id = res.getInt(1) + 1;
 	}
 
 	/** The user inputs a choice from a text menu, 
@@ -41,7 +45,7 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND");
+			ps = connection.prepareStatement("select * from MUTUALFUND");
 			res = ps.executeQuery();
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
@@ -59,7 +63,7 @@ public class Customer {
 			String category = kb.next();
 
 			//** sql **//
-			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
+			ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
 			ps.setString(1, category);
 
 			res = ps.executeQuery();
@@ -84,7 +88,7 @@ public class Customer {
 
 			//** sql **//
 			query = "select * from MUTUALFUND natural join CLOSINGPRICE where c_date = ? order by price asc";
-			PreparedStatement ps = connection.prepareStatement(query);
+			ps = connection.prepareStatement(query);
 			ps.setDate(1, date);
 
 			res = ps.executeQuery();
@@ -101,7 +105,7 @@ public class Customer {
 
 		// prints all the mutual funds in order by name ascending
 		else if (choice == 4) {
-			PreparedStatement ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
+			ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
 			res = ps.executeQuery();
 
 			System.out.println("Symbol\tName\tDescription\tCategory");
@@ -111,6 +115,7 @@ public class Customer {
 				System.out.print(res.getString("name")+"\t");
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
+			}
 		}
 	}
 
@@ -120,7 +125,7 @@ public class Customer {
 	public void search(String key1, String key2) {
 		//** sql **//
 		query = "select * from MUTUALFUND where description like %?% or description like %?%";
-		PreparedStatement ps = connection.prepareStatement(query);
+		ps = connection.prepareStatement(query);
 		ps.setString(1, key1);
 		ps.setString(2, key2);
 
@@ -141,14 +146,16 @@ public class Customer {
 	// this doesn't check to make sure all the possible mutual funds can be bought 
 	public void invest(float total_amount) {
 		//** sql **//
-		insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit');
+		update = "insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit'";
+		ps = connection.prepareStatement(update);
+		ps.executeUpdate();
 		// this triggers 'on_insert_log'
 		//** sql **//
 
 		balance -= total_amount;
 	}
 
-	/** calls a procedure that returns the price of one share and the total price of all shares sold
+	/** return the price of one share and the total price of all shares sold
 	 *	this data gets inserted into the trxlog table which triggers an increase on customer's balance
 	 *	and the customer object's balance is updated as well
 	 */
@@ -157,8 +164,21 @@ public class Customer {
 		float price_of_one_share;
 
 		//** sql **//
-		call total_shares_price(symbol, shares, total_price, price_of_one_share);
-		insert into TRXLOG values(trans_id++, login, symbol, ?date?, 'sell', shares, price_of_one_share, total_price);
+		// call total_shares_price(symbol, shares, total_price, price_of_one_share);
+		query = "select price * shares, price "+
+				"from MUTUALFUND natural join CLOSINGPRICE "+
+				"where symbol = ?";
+		ps = connection.prepareStatement(query);
+		ps.setString(1, symbol);
+
+		res = ps.executeQuery();
+
+		total_price = res.getInt(1);
+		price_of_one_share = res.getInt(2);
+
+		update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'sell', shares, price_of_one_share, total_price)";
+		ps = connection.prepareStatement(update);
+		ps.executeUpdate();
 		// this will trigger 'increase_customer_balance'
 		//** sql **//
 
@@ -178,7 +198,16 @@ public class Customer {
 
 			//** sql **//
 			// finds the price of a single share of the mutual fund and the total price of all the shares
-			call total_shares_price(symbol, shares, total_price, price_of_one_share);
+			query = "select price * shares, price "+
+					"from MUTUALFUND natural join CLOSINGPRICE "+
+					"where symbol = ?";
+			ps = connection.prepareStatement(query);
+			ps.setString(1, symbol);
+
+			res = ps.executeQuery();
+
+			total_price = res.getInt(1);
+			price_of_one_share = res.getInt(2);
 			//** sql **//
 
 			if (total_price > balance) {
@@ -188,8 +217,10 @@ public class Customer {
 				balance -= total_price;
 
 				//** sql **//
-				// try to insert an entry into trxlog(trans_id, login, symbol, date, 'buy', shares, price, price*shares)
-				insert into TRXLOG values(trans_id++, login, symbol, ?date?, 'buy', shares, price_of_one_share, total_price);
+				// try to insert an entry into trxlog
+				update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'buy', shares, price_of_one_share, total_price)";
+				ps = connection.prepareStatement(update);
+				ps.executeUpdate;
 				// this will trigger 'decrease_customer_balance'
 				//** sql **/
 		}

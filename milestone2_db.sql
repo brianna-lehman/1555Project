@@ -106,8 +106,8 @@ create or replace trigger increase_customer_balance
 	when (new.action = 'sell')
 	begin
 		update CUSTOMER
-		set balance = balance+total_price
-		where login = user_login -- how to get this user_login information into the trigger?
+		set balance = balance + :new.amount;
+		where login = :new.login
 	end;
 /
 
@@ -118,7 +118,7 @@ create or replace trigger decrease_customer_balance
 	when (new.action = 'buy')
 	begin
 		update CUSTOMER
-		set balance = balance - total_price
-		where login = user_login -- how to get this user_login information into the trigger?
+		set balance = balance - :new.amount;
+		where login = :new.login -- how to get this user_login information into the trigger?
 	end;
 /
