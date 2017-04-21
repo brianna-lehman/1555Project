@@ -1,5 +1,6 @@
 import java.util.*;
 import java.sql.*;
+import oracle.jdbc.driver.*;
 
 public class Customer {
 	private static String login;
@@ -281,6 +282,8 @@ public class Customer {
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
 	public void printPortfolio(String input_date) {
+		java.sql.Date input = new java.sql.Date(input);
+
 		// printing the symbol, price, and number of shares bought on a specific date
 		// as well as the current price of the mutual fund
 		query = "select trx.symbol, trx.price, trx.num_shares, cp.price "+
@@ -316,10 +319,11 @@ public class Customer {
 
 		// prints the total value of all money deposited or withdrawn by the customer
 		query = "select sum(price) from TRXLOG where login = ?";
-		ps = connection.prepareStatement(query);
+		PreparedStatement ps = connection.prepareStatement(query);
 		ps.setString(1, login);
 
 		res = ps.exectueQuery();
+		res.next();
 
 		System.out.println("\nTotal Value");
 		System.out.println(res.nextFloat(1));
