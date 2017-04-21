@@ -100,11 +100,12 @@ public class Customer {
 				System.out.print(res.getString("name")+"\t");
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
+			}
 			//** sql **//
 		}
 
 		// prints all the mutual funds in order by name ascending
-		else if (choice == 4) {
+		else {
 			ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
 			res = ps.executeQuery();
 
@@ -213,7 +214,7 @@ public class Customer {
 			if (total_price > balance) {
 				System.out.println("You don't have enough money to buy this amount of shares.");
 			}
-			else 
+			else {
 				balance -= total_price;
 
 				//** sql **//
@@ -223,6 +224,7 @@ public class Customer {
 				ps.executeUpdate;
 				// this will trigger 'decrease_customer_balance'
 				//** sql **/
+			}
 		}
 
 		// buying based on price
