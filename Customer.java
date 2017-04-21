@@ -22,25 +22,26 @@ public class Customer {
 			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 			String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
 			connection = DriverManager.getConnection(url, "bml49", "3985224");
+
+			this.login = login;
+			this.name = name;
+			this.email = email;
+			this.address = address;
+			this.balance = balance;
+
+			statement = connection.createStatement();
+			res = statement.executeQuery("select MAX(trans_id) from TRXLOG");
+			trans_id = res.getInt(1) + 1;
+
+			// hard coded date because I couldn't figure out how to get date to work
+			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+			currDate = new java.sql.Date(df.parse("2017-04-21").getTime());
+
 		}
 		catch(Exception ex) {
 			System.out.println("Error connecting to database.");
 			ex.printStackTrace();
 		}
-
-		this.login = login;
-		this.name = name;
-		this.email = email;
-		this.address = address;
-		this.balance = balance;
-
-		statement = connection.createStatement();
-		res = statement.executeQuery("select MAX(trans_id) from TRXLOG");
-		trans_id = res.getInt(1) + 1;
-
-		// hard coded date because I couldn't figure out how to get date to work
-		java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
-		currDate = new java.sql.Date(df.parse("2017-04-21").getTime());
 	}
 
 	/** The user inputs a choice from a text menu,
@@ -50,16 +51,18 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			statement = connection.createStatement();
-			res = statement.executeQuery("select * from MUTUALFUND");
-			System.out.println("Symbol\tName\tDescription\tCategory");
+			try {
+				statement = connection.createStatement();
+				res = statement.executeQuery("select * from MUTUALFUND");
+				System.out.println("Symbol\tName\tDescription\tCategory");
 
-			while (res.next()) {
-				System.out.print(res.getString("symbol")+"\t");
-				System.out.print(res.getString("name")+"\t");
-				System.out.print(res.getString("description")+"\t");
-				System.out.print(res.getString("category")+"\t");
-			}
+				while (res.next()) {
+					System.out.print(res.getString("symbol")+"\t");
+					System.out.print(res.getString("name")+"\t");
+					System.out.print(res.getString("description")+"\t");
+					System.out.print(res.getString("category")+"\t");
+				}
+			} catch (Exception ex) ex.printStackTrace();
 		}
 
 		// prints all the mutual funds of a specific category
@@ -68,18 +71,20 @@ public class Customer {
 			String category = kb.next();
 
 			//** sql **//
-			ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
-			ps.setString(1, category);
+			try {
+				ps = connection.prepareStatement("select * from MUTUALFUND where category = ?");
+				ps.setString(1, category);
 
-			res = ps.executeQuery();
-			System.out.println("Symbol\tName\tDescription\tCategory");
+				res = ps.executeQuery();
+				System.out.println("Symbol\tName\tDescription\tCategory");
 
-			while (res.next()) {
-				System.out.print(res.getString("symbol")+"\t");
-				System.out.print(res.getString("name")+"\t");
-				System.out.print(res.getString("description")+"\t");
-				System.out.print(res.getString("category")+"\t");
-			}
+				while (res.next()) {
+					System.out.print(res.getString("symbol")+"\t");
+					System.out.print(res.getString("name")+"\t");
+					System.out.print(res.getString("description")+"\t");
+					System.out.print(res.getString("category")+"\t");
+				}
+			} catch (Exception ex) ex.printStackTrace();
 			//** sql **//
 		}
 
@@ -88,16 +93,60 @@ public class Customer {
 			System.out.print("Type in the date (dd/mm/yyyy): ");
 			String date_input = kb.next();
 
-			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd/mm/yyyy");
-			java.sql.Date input_date = new java.sql.Date(df.parse(date_input).getTime());
+			try {
+				java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd/mm/yyyy");
+				java.sql.Date input_date = new java.sql.Date(df.parse(date_input).getTime());
 
+				//** sql **//
+				query = "select * "+
+						"from MUTUALFUND natural join CLOSINGPRICE "+
+						"where c_date = ? "+
+						"order by price asc";
+				ps = connection.prepareStatement(query);
+				ps.setDate(1, input_date);
+
+				res = ps.executeQuery();
+
+				System.out.println("Symbol\tName\tDescription\tCategory");
+
+				while (res.next()) {
+					System.out.print(res.getString("symbol")+"\t");
+					System.out.print(res.getString("name")+"\t");
+					System.out.print(res.getString("description")+"\t");
+					System.out.print(res.getString("category")+"\t");
+				}
+			} catch (Exception ex) ex.printStackTrace();
 			//** sql **//
-			query = "select * "+
-					"from MUTUALFUND natural join CLOSINGPRICE "+
-					"where c_date = ? "+
-					"order by price asc";
+		}
+
+		// prints all the mutual funds in order by name ascending
+		else {
+			try {
+				statement = connection.createStatement();
+				res = statement.executeQuery("select * from MUTUALFUND order by name asc");
+
+				System.out.println("Symbol\tName\tDescription\tCategory");
+
+				while (res.next()) {
+					System.out.print(res.getString("symbol")+"\t");
+					System.out.print(res.getString("name")+"\t");
+					System.out.print(res.getString("description")+"\t");
+					System.out.print(res.getString("category")+"\t");
+				}
+			} catch (Exception ex) ex.printStackTrace();
+		}
+	}
+
+	/** searches descriptions of mutual funds for the user specified keywords
+	 */
+	public void search(String key1, String key2) {
+		//** sql **//
+		try {
+			query = "select * from MUTUALFUND "+
+					"where description like %?% or description like %?%";
 			ps = connection.prepareStatement(query);
-			ps.setDate(1, input_date);
+			ps.setString(1, key1);
+			ps.setString(2, key2);
 
 			res = ps.executeQuery();
 
@@ -109,45 +158,7 @@ public class Customer {
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
 			}
-			//** sql **//
-		}
-
-		// prints all the mutual funds in order by name ascending
-		else {
-			statement = connection.createStatement();
-			res = statement.executeQuery("select * from MUTUALFUND order by name asc");
-
-			System.out.println("Symbol\tName\tDescription\tCategory");
-
-			while (res.next()) {
-				System.out.print(res.getString("symbol")+"\t");
-				System.out.print(res.getString("name")+"\t");
-				System.out.print(res.getString("description")+"\t");
-				System.out.print(res.getString("category")+"\t");
-			}
-		}
-	}
-
-	/** searches descriptions of mutual funds for the user specified keywords
-	 */
-	public void search(String key1, String key2) {
-		//** sql **//
-		query = "select * from MUTUALFUND "+
-				"where description like %?% or description like %?%";
-		ps = connection.prepareStatement(query);
-		ps.setString(1, key1);
-		ps.setString(2, key2);
-
-		res = ps.executeQuery();
-
-		System.out.println("Symbol\tName\tDescription\tCategory");
-
-		while (res.next()) {
-			System.out.print(res.getString("symbol")+"\t");
-			System.out.print(res.getString("name")+"\t");
-			System.out.print(res.getString("description")+"\t");
-			System.out.print(res.getString("category")+"\t");
-		}
+		} catch (Exception ex) ex.printStackTrace();
 		//** sql **//
 	}
 
@@ -155,14 +166,16 @@ public class Customer {
 	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
-		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(?, ?, ?, 'deposit', ?)";
-		ps = connection.prepareStatement(update);
-		ps.setInt(1, trans_id++);
-		ps.setString(2, login);
-		ps.setDate(3, currDate);
-		ps.setFloat(4, total_amount);
-		ps.executeUpdate();
-		// this triggers 'on_insert_log'
+		try {
+			update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(?, ?, ?, 'deposit', ?)";
+			ps = connection.prepareStatement(update);
+			ps.setInt(1, trans_id++);
+			ps.setString(2, login);
+			ps.setDate(3, currDate);
+			ps.setFloat(4, total_amount);
+			ps.executeUpdate();
+			// this triggers 'on_insert_log'
+		} catch (Exception ex) ex.printStackTrace();
 		//** sql **//
 
 		balance -= total_amount;
@@ -177,29 +190,30 @@ public class Customer {
 		float price_of_one_share;
 
 		//** sql **//
-		// call total_shares_price(symbol, shares, total_price, price_of_one_share);
-		query = "select price * shares, price "+
-				"from MUTUALFUND natural join CLOSINGPRICE "+
-				"where symbol = ?";
-		ps = connection.prepareStatement(query);
-		ps.setString(1, symbol);
+		try {
+			query = "select price * shares, price "+
+					"from MUTUALFUND natural join CLOSINGPRICE "+
+					"where symbol = ?";
+			ps = connection.prepareStatement(query);
+			ps.setString(1, symbol);
 
-		res = ps.executeQuery();
+			res = ps.executeQuery();
 
-		total_price = res.getInt(1);
-		price_of_one_share = res.getInt(2);
+			total_price = res.getInt(1);
+			price_of_one_share = res.getInt(2);
 
-		update = "insert into TRXLOG values(?, ?, ?, ?, 'sell', ?, ?, ?)";
-		ps = connection.prepareStatement(update);
-		ps.setInt(1, trans_id++);
-		ps.setString(2, login);
-		ps.setString(3, symbol);
-		ps.setDate(4, currDate);
-		ps.setInt(5, shares);
-		ps.setFloat(6, price_of_one_share);
-		ps.setFloat(7, total_price);
-		ps.executeUpdate();
-		// this will trigger 'increase_customer_balance'
+			update = "insert into TRXLOG values(?, ?, ?, ?, 'sell', ?, ?, ?)";
+			ps = connection.prepareStatement(update);
+			ps.setInt(1, trans_id++);
+			ps.setString(2, login);
+			ps.setString(3, symbol);
+			ps.setDate(4, currDate);
+			ps.setInt(5, shares);
+			ps.setFloat(6, price_of_one_share);
+			ps.setFloat(7, total_price);
+			ps.executeUpdate();
+			// this will trigger 'increase_customer_balance'
+		} catch (Exception ex) ex.printStackTrace();
 		//** sql **//
 
 		// update the customer object balance field
@@ -217,42 +231,44 @@ public class Customer {
 			float price_of_one_share;
 
 			//** sql **//
-			// finds the price of a single share of the mutual fund and the total price of all the shares
-			query = "select price * ?, price "+
-					"from MUTUALFUND natural join CLOSINGPRICE "+
-					"where symbol = ?";
-			ps = connection.prepareStatement(query);
-			ps.setInt(1, shares);
-			ps.setString(2, symbol);
+			try {
+				// finds the price of a single share of the mutual fund and the total price of all the shares
+				query = "select price * ?, price "+
+						"from MUTUALFUND natural join CLOSINGPRICE "+
+						"where symbol = ?";
+				ps = connection.prepareStatement(query);
+				ps.setInt(1, shares);
+				ps.setString(2, symbol);
 
-			res = ps.executeQuery();
+				res = ps.executeQuery();
 
-			total_price = res.getInt(1);
-			price_of_one_share = res.getInt(2);
-			//** sql **//
-
-			if (total_price > balance) {
-				System.out.println("You don't have enough money to buy this amount of shares.");
-			}
-			else {
-				balance -= total_price;
-
+				total_price = res.getInt(1);
+				price_of_one_share = res.getInt(2);
 				//** sql **//
-				// try to insert an entry into trxlog
-				update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
-				ps = connection.prepareStatement(update);
-				ps.setInt(1, trans_id++);
-				ps.setString(2, login);
-				ps.setString(3, symbol);
-				ps.setDate(4, currDate);
-				ps.setInt(5, shares);
-				ps.setFloat(6, price_of_one_share);
-				ps.setFloat(7, total_price);
-				ps.executeUpdate();
 
-				// this will trigger 'decrease_customer_balance'
-				//** sql **/
-			}
+				if (total_price > balance) {
+					System.out.println("You don't have enough money to buy this amount of shares.");
+				}
+				else {
+					balance -= total_price;
+
+					//** sql **//
+					// try to insert an entry into trxlog
+					update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
+					ps = connection.prepareStatement(update);
+					ps.setInt(1, trans_id++);
+					ps.setString(2, login);
+					ps.setString(3, symbol);
+					ps.setDate(4, currDate);
+					ps.setInt(5, shares);
+					ps.setFloat(6, price_of_one_share);
+					ps.setFloat(7, total_price);
+					ps.executeUpdate();
+
+					// this will trigger 'decrease_customer_balance'
+					//** sql **/
+				}
+			} catch (Exception ex) ex.printStackTrace();
 		}
 
 		// buying based on price
@@ -266,30 +282,31 @@ public class Customer {
 				System.out.println("You don't have enough money to buy this amount of shares.");
 			else {
 				//** sql **//
-				//call num_shares_from_input_price(symbol, total_price, shares, price_of_one_share);
-				query = "?/price, price "+
-						"from MUTUALFUND natural join CLOSINGPRICE "+
-						"where symbol = ?";
-				ps = connection.prepareStatement(query);
-				ps.setFloat(1, total_price);
-				ps.setString(2, symbol);
+				try {
+					query = "?/price, price "+
+							"from MUTUALFUND natural join CLOSINGPRICE "+
+							"where symbol = ?";
+					ps = connection.prepareStatement(query);
+					ps.setFloat(1, total_price);
+					ps.setString(2, symbol);
 
-				res = ps.executeQuery();
+					res = ps.executeQuery();
 
-				total_price = res.getInt(1);
-				price_of_one_share = res.getInt(2);
+					total_price = res.getInt(1);
+					price_of_one_share = res.getInt(2);
 
-				update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
-				ps = connection.prepareStatement(update);
-				ps.setInt(1, trans_id++);
-				ps.setString(2, login);
-				ps.setString(3, symbol);
-				ps.setDate(4, currDate);
-				ps.setInt(5, shares);
-				ps.setFloat(6, price_of_one_share);
-				ps.setFloat(7, total_price);
-				ps.executeUpdate();
-				// this will trigger 'decrease_customer_balance'
+					update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
+					ps = connection.prepareStatement(update);
+					ps.setInt(1, trans_id++);
+					ps.setString(2, login);
+					ps.setString(3, symbol);
+					ps.setDate(4, currDate);
+					ps.setInt(5, shares);
+					ps.setFloat(6, price_of_one_share);
+					ps.setFloat(7, total_price);
+					ps.executeUpdate();
+					// this will trigger 'decrease_customer_balance'
+				} catch (Exception ex) ex.printStackTrace();
 				//** sql **//
 			}
 		}
@@ -308,51 +325,53 @@ public class Customer {
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
 	public void printPortfolio(String input_date) {
-		java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-mm-dd");
-		java.sql.Date t_date = new java.sql.Date(df.parse(input_date).getTime());
+		try {
+			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-mm-dd");
+			java.sql.Date t_date = new java.sql.Date(df.parse(input_date).getTime());
 
-		// printing the symbol, price, and number of shares bought on a specific date
-		// as well as the current price of the mutual fund
-		query = "select trx.symbol, trx.price, trx.num_shares, cp.price "+
-				"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
-				"where t_date = ? and login = ?";
-		ps = connection.prepareStatement(query);
-		ps.setDate(1, t_date);
-		ps.setString(2, login);
+			// printing the symbol, price, and number of shares bought on a specific date
+			// as well as the current price of the mutual fund
+			query = "select trx.symbol, trx.price, trx.num_shares, cp.price "+
+					"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
+					"where t_date = ? and login = ?";
+			ps = connection.prepareStatement(query);
+			ps.setDate(1, t_date);
+			ps.setString(2, login);
 
-		res = ps.executeQuery();
+			res = ps.executeQuery();
 
-		System.out.println("Symbol\tPrice\tNumber of Shares\tCurrent Value");
+			System.out.println("Symbol\tPrice\tNumber of Shares\tCurrent Value");
 
-		while (res.next()) {
-			System.out.print(res.getString(1)+"\t");
-			System.out.print(res.getString(2)+"\t");
-			System.out.print(res.getInt(3)+"\t");
-			System.out.print(res.getFloat(4)+"\t\n");
-		}
+			while (res.next()) {
+				System.out.print(res.getString(1)+"\t");
+				System.out.print(res.getString(2)+"\t");
+				System.out.print(res.getInt(3)+"\t");
+				System.out.print(res.getFloat(4)+"\t\n");
+			}
 
-		// finds the yield of the customer's portfolio by subtracting the mutual funds
-		// that were bought from the mutual funds that were sold
-		query = "select sum(price) - (select sum(price) from TRXLOG where login = ? and action = 'buy') "+
-				"from TRXLOG where login = ? and action = 'sell'";
-		ps = connection.prepareStatement(query);
-		ps.setString(1, login);
-		ps.setString(2, login);
+			// finds the yield of the customer's portfolio by subtracting the mutual funds
+			// that were bought from the mutual funds that were sold
+			query = "select sum(price) - (select sum(price) from TRXLOG where login = ? and action = 'buy') "+
+					"from TRXLOG where login = ? and action = 'sell'";
+			ps = connection.prepareStatement(query);
+			ps.setString(1, login);
+			ps.setString(2, login);
 
-		res = ps.executeQuery();
+			res = ps.executeQuery();
 
-		System.out.println("\nYield");
-		System.out.println(res.getInt(1));
+			System.out.println("\nYield");
+			System.out.println(res.getInt(1));
 
-		// prints the total value of all money deposited or withdrawn by the customer
-		query = "select sum(price) from TRXLOG where login = ?";
-		ps = connection.prepareStatement(query);
-		ps.setString(1, login);
+			// prints the total value of all money deposited or withdrawn by the customer
+			query = "select sum(price) from TRXLOG where login = ?";
+			ps = connection.prepareStatement(query);
+			ps.setString(1, login);
 
-		res = ps.executeQuery();
-		res.next();
+			res = ps.executeQuery();
+			res.next();
 
-		System.out.println("\nTotal Value");
-		System.out.println(res.getFloat(1));
+			System.out.println("\nTotal Value");
+			System.out.println(res.getFloat(1));
+		} catch (Exception ex) ex.printStackTrace();
 	}
 }
