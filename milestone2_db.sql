@@ -107,7 +107,7 @@ create or replace trigger increase_customer_balance
 	begin
 		update CUSTOMER
 		set balance = balance + :new.amount;
-		where login = :new.login
+		where login = :new.login;
 	end;
 /
 
@@ -119,6 +119,6 @@ create or replace trigger decrease_customer_balance
 	begin
 		update CUSTOMER
 		set balance = balance - :new.amount;
-		where login = :new.login -- how to get this user_login information into the trigger?
+		where login = :new.login;
 	end;
 /

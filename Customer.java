@@ -87,7 +87,10 @@ public class Customer {
 			java.sql.Date date = new java.sql.Date(df.parse(date_input).getTime());
 
 			//** sql **//
-			query = "select * from MUTUALFUND natural join CLOSINGPRICE where c_date = ? order by price asc";
+			query = "select * "+
+					"from MUTUALFUND natural join CLOSINGPRICE "+
+					"where c_date = ? "+
+					"order by price asc";
 			ps = connection.prepareStatement(query);
 			ps.setDate(1, date);
 
@@ -125,7 +128,8 @@ public class Customer {
 	 */
 	public void search(String key1, String key2) {
 		//** sql **//
-		query = "select * from MUTUALFUND where description like %?% or description like %?%";
+		query = "select * from MUTUALFUND "+
+				"where description like %?% or description like %?%";
 		ps = connection.prepareStatement(query);
 		ps.setString(1, key1);
 		ps.setString(2, key2);
@@ -199,11 +203,12 @@ public class Customer {
 
 			//** sql **//
 			// finds the price of a single share of the mutual fund and the total price of all the shares
-			query = "select price * shares, price "+
+			query = "select price * ?, price "+
 					"from MUTUALFUND natural join CLOSINGPRICE "+
 					"where symbol = ?";
 			ps = connection.prepareStatement(query);
-			ps.setString(1, symbol);
+			ps.setInt(1, shares);
+			ps.setString(2, symbol);
 
 			res = ps.executeQuery();
 
@@ -239,7 +244,21 @@ public class Customer {
 			else {
 				//** sql **//
 				//call num_shares_from_input_price(symbol, total_price, shares, price_of_one_share);
-				//insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price);
+				query = "?/price, price "+
+						"from MUTUALFUND natural join CLOSINGPRICE "+
+						"where symbol = ?";
+				ps = connection.prepareStatement(query);
+				ps.setFloat(1, total_price);
+				ps.setString(2, symbol);
+
+				res = ps.executeQuery();
+
+				total_price = res.getInt(1);
+				price_of_one_share = res.getInt(2);
+
+				update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'buy', shares, price_of_one_share, total_price)";
+				ps = connection.prepareStatement(update);
+				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
 				//** sql **//
 			}
