@@ -50,6 +50,7 @@ public class Admin {
       // BEGIN
       // return true;
     }
+    return false;
   } // end checkLogin
 
   // updates the shares in the specified mutual fund
