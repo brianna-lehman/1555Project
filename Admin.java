@@ -57,7 +57,7 @@ public class Admin {
   } // end updateShare(String)
 
   // inserts a new mutual fund
-  public void addFund(String fund, String symbol, category) {
+  public void addFund(String fund, String symbol, String category) {
     // embedded SQL
     // INSERT INTO MUTUALFUND VALUES ();
 

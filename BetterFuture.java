@@ -1,12 +1,13 @@
 import java.util.*;
 import java.sql.*;
+import java.lang.*;
 
 public class BetterFuture {
 
-	private Connection connection;
-	private Statement statement;
-	private ResultSet resultSet;
-	private String query;
+	public static Connection connection;
+	public static Statement statement;
+	public static ResultSet resultSet;
+	public static String query;
 
 	public static Scanner kb = new Scanner(System.in);
 
@@ -64,7 +65,7 @@ public class BetterFuture {
 					boolean ifSuccess = false;
 					System.out.println("Is the new user and administrator? (Y/N)");
 					String isAdmin = kb.next();
-					isAdmin = Character.toUpperCase(isAdmin);
+					isAdmin = charAt(0).toUpperCase(isAdmin);
 					if (isAdmin == 'Y') {
 						// insert new login into Admin db
 						System.out.println("Please enter the following information:");

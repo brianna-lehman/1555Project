@@ -2,11 +2,11 @@ import java.util.*;
 import java.sql.*;
 
 public class Customer {
-	private static String login
-	private static String name
-	private static String email
-	private static String address
-	private static float balance
+	private static String login;
+	private static String name;
+	private static String email;
+	private static String address;
+	private static float balance;
 	private static int trans_id;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
@@ -38,7 +38,7 @@ public class Customer {
 		trans_id = res.getInt(1) + 1;
 	}
 
-	/** The user inputs a choice from a text menu, 
+	/** The user inputs a choice from a text menu,
 	 *	based on the choice, a mutual fund table is printed
 	 */
 	public void browse(int choice) {
@@ -120,9 +120,9 @@ public class Customer {
 		}
 	}
 
-	/** calls a procedure that searches descriptions of mutual funds for the user specified keywords 
+	/** calls a procedure that searches descriptions of mutual funds for the user specified keywords
 	 *	?I don't think this prints to the screen?
-	 */ 
+	 */
 	public void search(String key1, String key2) {
 		//** sql **//
 		query = "select * from MUTUALFUND where description like %?% or description like %?%";
@@ -144,7 +144,7 @@ public class Customer {
 	}
 
 	// a certain percentage of the amount is invested in buying a specific mutual fund
-	// this doesn't check to make sure all the possible mutual funds can be bought 
+	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
 		update = "insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit'";
@@ -187,7 +187,7 @@ public class Customer {
 		balance += total_price;
 	}
 
-	/** user can chose to buy mutual funds based on number of shares or price */ 
+	/** user can chose to buy mutual funds based on number of shares or price */
 	public void buy(String symbol, int choice) {
 
 		// buying based on shares
@@ -221,7 +221,7 @@ public class Customer {
 				// try to insert an entry into trxlog
 				update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'buy', shares, price_of_one_share, total_price)";
 				ps = connection.prepareStatement(update);
-				ps.executeUpdate;
+				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
 				//** sql **/
 			}
@@ -234,14 +234,15 @@ public class Customer {
 			int shares;
 			float price_of_one_share;
 
-			if total_price > balance
+			if (total_price > balance)
 				System.out.println("You don't have enough money to buy this amount of shares.");
-			else
+			else {
 				//** sql **//
-				call num_shares_from_input_price(symbol, total_price, shares, price_of_one_share);
-				insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price);
+				//call num_shares_from_input_price(symbol, total_price, shares, price_of_one_share);
+				//insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price);
 				// this will trigger 'decrease_customer_balance'
 				//** sql **//
+			}
 		}
 
 		// incorrect input
@@ -258,6 +259,6 @@ public class Customer {
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
 	public void printPortfolio(String date) {
-		call customer_profile(?date?, login);
+		//call customer_profile(?date?, login);
 	}
 }
