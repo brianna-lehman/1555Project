@@ -387,10 +387,10 @@ public class BetterFuture {
 		String login = kb.next();
 		System.out.println("Password: ");
 		String password = kb.next();
-		String real_password;
-		String name;
-		String email;
-		String address;
+		String real_password = "";
+		String name = "";
+		String email = "";
+		String address = "";
 
 		//** embedded sql **//
 		//call check_login_admin(login, real_password, name, email, address);

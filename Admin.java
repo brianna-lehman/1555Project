@@ -48,7 +48,7 @@ public class Admin {
     // from CLOSINGPRICE
     // where name = choice
     System.out.print("What price would you like to update the shares to: $");
-    float updatePrice = kb.next();
+    float updatePrice = kb.nextFloat();
 
     // updates the information
     // embedded SQL code here
