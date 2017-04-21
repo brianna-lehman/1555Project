@@ -154,7 +154,7 @@ public class Customer {
 	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
-		update = "insert into TRXLOG(trans_id, login, t_date, action) values(trans_id++, login, date, 'deposit'";
+		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(trans_id++, login, date, 'deposit', total_amount)";
 		ps = connection.prepareStatement(update);
 		ps.executeUpdate();
 		// this triggers 'on_insert_log'
