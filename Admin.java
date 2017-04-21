@@ -1,11 +1,24 @@
 import java.sql.*;
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
 public class Admin {
   String login;
   String name;
   String email;
   String address;
+  public static Scanner = new Scanner(System.in);
+  private Connection connection;
+  private BufferedReader br;
+
+  public Admin() {
+    try {
+      DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+      String url = "jdbc:oracle:thin:@db10.cs.pitt.edu:1521:dbclass";
+      connection = DriverManager.getConnection(url, "vtt2", "password");
+    } catch (SQLException e) { e.printStackTrace();}
+  } // end Admin()
 
   // Parameterized constructor
   public Admin(String login, String name, String email, String address) {

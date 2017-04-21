@@ -46,7 +46,8 @@ public class BetterFuture {
 	// interface used for the administrator
 	public static void adminInterface() {
 		int menuChoice = 0;
-		Admin admin = adminLogin();
+		Admin admin - new Admin();
+		admin = adminLogin();
 
 		while (menuChoice < 6) {
 			System.out.println("\nChoose one of the following:");
