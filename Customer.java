@@ -60,7 +60,7 @@ public class Customer {
 					System.out.print(res.getString("symbol")+"\t");
 					System.out.print(res.getString("name")+"\t");
 					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t");
+					System.out.print(res.getString("category")+"\t\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 		}
@@ -82,7 +82,7 @@ public class Customer {
 					System.out.print(res.getString("symbol")+"\t");
 					System.out.print(res.getString("name")+"\t");
 					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t");
+					System.out.print(res.getString("category")+"\t\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
@@ -113,7 +113,7 @@ public class Customer {
 					System.out.print(res.getString("symbol")+"\t");
 					System.out.print(res.getString("name")+"\t");
 					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t");
+					System.out.print(res.getString("category")+"\t\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
@@ -131,7 +131,7 @@ public class Customer {
 					System.out.print(res.getString("symbol")+"\t");
 					System.out.print(res.getString("name")+"\t");
 					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t");
+					System.out.print(res.getString("category")+"\t\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 		}
@@ -156,7 +156,7 @@ public class Customer {
 				System.out.print(res.getString("symbol")+"\t");
 				System.out.print(res.getString("name")+"\t");
 				System.out.print(res.getString("description")+"\t");
-				System.out.print(res.getString("category")+"\t");
+				System.out.print(res.getString("category")+"\t\n");
 			}
 		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
