@@ -90,17 +90,21 @@ public class BetterFuture {
 						String adminAddress = kb.next();
 
 						// embedded sql
+						try {
+							String update = "insert into ADMINISTRATOR values(?, ?, ?, ?, ?)";
+							PreparedStatement ps = connection.prepareStatement(update);
+							ps.setString(1, adminLog);
+							ps.setString(2, adminName);
+							ps.setString(3, adminEmail);
+							ps.setString(4, adminAddress);
+							ps.setString(5, adminPass);
+							ps.executeUpdate();
 
-						String update = "insert into ADMINISTRATOR values(?, ?, ?, ?, ?)";
-						PreparedStatement ps = connection.prepareStatement(update);
-						ps.setString(1, adminLog);
-						ps.setString(2, adminName);
-						ps.setString(3, adminEmail);
-						ps.setString(4, adminAddress);
-						ps.setString(5, adminPass);
-						ps.executeUpdate();
-
-						System.out.println("\nAdministrator data has been stored successfully!\n");
+							System.out.println("\nAdministrator data has been stored successfully!\n");
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+						}
 					}
 					// If the new user is not an admin
 					else {
@@ -126,17 +130,22 @@ public class BetterFuture {
 						String customerAddress = kb.next();
 
 						// embedded sql
-						String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, 0)";
-						PreparedStatement ps = connection.prepareStatement(update);
-						ps.setString(1, customerLog);
-						ps.setString(2, customerName);
-						ps.setString(3, customerEmail);
-						ps.setString(4, customerAddress);
-						ps.setString(5, customerPass);
-						ps.executeUpdate();
-						// sql
+						try {
+							String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, 0)";
+							PreparedStatement ps = connection.prepareStatement(update);
+							ps.setString(1, customerLog);
+							ps.setString(2, customerName);
+							ps.setString(3, customerEmail);
+							ps.setString(4, customerAddress);
+							ps.setString(5, customerPass);
+							ps.executeUpdate();
+							// sql
 
-						System.out.println("\nCustomer data has been stored successfully!\n");
+							System.out.println("\nCustomer data has been stored successfully!\n");
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+						}
 					}
 					break;
 				// UPDATE SHARE QUOTES FOR THE DAY

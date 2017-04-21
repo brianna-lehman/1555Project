@@ -16,7 +16,7 @@ public class Admin {
     try {
       DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
       String url = "jdbc:oracle:thin:@db10.cs.pitt.edu:1521:dbclass";
-      connection = DriverManager.getConnection(url, "vtt2", "password");
+      connection = DriverManager.getConnection(url, "bml49", "3985224");
     } catch (SQLException e) { e.printStackTrace();}
   } // end Admin()
 
