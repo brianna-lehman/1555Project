@@ -91,9 +91,15 @@ public class BetterFuture {
 						String adminAddress = kb.next();
 
 						// embedded sql
-						// insert function will be included here
-						// INSERT INTO ADMINISTRATOR(adminLog, adminName, adminEmail,
-						//													 adminAddress, adminPass);
+
+						String update = "insert into ADMINISTRATOR values(?, ?, ?, ?, ?)";
+						PreparedStatement ps = connection.prepareStatement(update);
+						ps.setString(1, adminLog);
+						ps.setString(2, adminName);
+						ps.setString(3, adminEmail);
+						ps.setString(4, adminAddress);
+						ps.setString(5, adminPass);
+						ps.executeUpdate();
 
 						System.out.println("\nAdministrator data has been stored successfully!\n");
 					}
@@ -121,7 +127,7 @@ public class BetterFuture {
 						String customerAddress = kb.next();
 
 						// embedded sql
-						String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, NULL)";
+						String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, 0)";
 						PreparedStatement ps = connection.prepareStatement(query);
 						ps.setString(1, customerLog);
 						ps.setString(2, customerName);
