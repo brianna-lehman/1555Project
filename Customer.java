@@ -8,6 +8,7 @@ public class Customer {
 	private static String address;
 	private static float balance;
 	private static int trans_id;
+	private static java.sql.Date date;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
 	private Statement statement;
@@ -36,6 +37,9 @@ public class Customer {
 		ps = connection.prepareStatement("select MAX(trans_id) from TRXLOG");
 		res = ps.executeQuery();
 		trans_id = res.getInt(1) + 1;
+
+		java.util.Date today = new Date();
+		date = new Date(today.getTime());
 	}
 
 	/** The user inputs a choice from a text menu,
@@ -123,8 +127,7 @@ public class Customer {
 		}
 	}
 
-	/** calls a procedure that searches descriptions of mutual funds for the user specified keywords
-	 *	?I don't think this prints to the screen?
+	/** searches descriptions of mutual funds for the user specified keywords
 	 */
 	public void search(String key1, String key2) {
 		//** sql **//
@@ -167,6 +170,8 @@ public class Customer {
 	public void sell(String symbol, int shares) {
 		float total_price;
 		float price_of_one_share;
+		java.util.Date today = new Date();
+		java.sql.Date date = new Date(today.getTime());
 
 		//** sql **//
 		// call total_shares_price(symbol, shares, total_price, price_of_one_share);
@@ -181,7 +186,7 @@ public class Customer {
 		total_price = res.getInt(1);
 		price_of_one_share = res.getInt(2);
 
-		update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'sell', shares, price_of_one_share, total_price)";
+		update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'sell', shares, price_of_one_share, total_price)";
 		ps = connection.prepareStatement(update);
 		ps.executeUpdate();
 		// this will trigger 'increase_customer_balance'
@@ -224,7 +229,7 @@ public class Customer {
 
 				//** sql **//
 				// try to insert an entry into trxlog
-				update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'buy', shares, price_of_one_share, total_price)";
+				update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price)";
 				ps = connection.prepareStatement(update);
 				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
@@ -256,7 +261,7 @@ public class Customer {
 				total_price = res.getInt(1);
 				price_of_one_share = res.getInt(2);
 
-				update = "insert into TRXLOG values(trans_id++, login, symbol, /*date*/, 'buy', shares, price_of_one_share, total_price)";
+				update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price)";
 				ps = connection.prepareStatement(update);
 				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
