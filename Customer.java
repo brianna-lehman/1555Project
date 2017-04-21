@@ -62,7 +62,7 @@ public class Customer {
 					System.out.print(res.getString("description")+"\t");
 					System.out.print(res.getString("category")+"\t");
 				}
-			} catch (Exception ex) ex.printStackTrace();
+			} catch (Exception ex) { ex.printStackTrace(); }
 		}
 
 		// prints all the mutual funds of a specific category
@@ -84,7 +84,7 @@ public class Customer {
 					System.out.print(res.getString("description")+"\t");
 					System.out.print(res.getString("category")+"\t");
 				}
-			} catch (Exception ex) ex.printStackTrace();
+			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
 		}
 
@@ -115,7 +115,7 @@ public class Customer {
 					System.out.print(res.getString("description")+"\t");
 					System.out.print(res.getString("category")+"\t");
 				}
-			} catch (Exception ex) ex.printStackTrace();
+			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
 		}
 
@@ -133,7 +133,7 @@ public class Customer {
 					System.out.print(res.getString("description")+"\t");
 					System.out.print(res.getString("category")+"\t");
 				}
-			} catch (Exception ex) ex.printStackTrace();
+			} catch (Exception ex) { ex.printStackTrace(); }
 		}
 	}
 
@@ -158,7 +158,7 @@ public class Customer {
 				System.out.print(res.getString("description")+"\t");
 				System.out.print(res.getString("category")+"\t");
 			}
-		} catch (Exception ex) ex.printStackTrace();
+		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
 	}
 
@@ -175,7 +175,7 @@ public class Customer {
 			ps.setFloat(4, total_amount);
 			ps.executeUpdate();
 			// this triggers 'on_insert_log'
-		} catch (Exception ex) ex.printStackTrace();
+		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
 
 		balance -= total_amount;
@@ -213,7 +213,7 @@ public class Customer {
 			ps.setFloat(7, total_price);
 			ps.executeUpdate();
 			// this will trigger 'increase_customer_balance'
-		} catch (Exception ex) ex.printStackTrace();
+		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
 
 		// update the customer object balance field
@@ -268,7 +268,7 @@ public class Customer {
 					// this will trigger 'decrease_customer_balance'
 					//** sql **/
 				}
-			} catch (Exception ex) ex.printStackTrace();
+			} catch (Exception ex) { ex.printStackTrace(); }
 		}
 
 		// buying based on price
@@ -306,7 +306,7 @@ public class Customer {
 					ps.setFloat(7, total_price);
 					ps.executeUpdate();
 					// this will trigger 'decrease_customer_balance'
-				} catch (Exception ex) ex.printStackTrace();
+				} catch (Exception ex) { ex.printStackTrace(); }
 				//** sql **//
 			}
 		}
@@ -372,6 +372,6 @@ public class Customer {
 
 			System.out.println("\nTotal Value");
 			System.out.println(res.getFloat(1));
-		} catch (Exception ex) ex.printStackTrace();
+		} catch (Exception ex) { ex.printStackTrace(); }
 	}
 }
