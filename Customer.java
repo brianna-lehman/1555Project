@@ -342,7 +342,7 @@ public class Customer {
 		res = ps.executeQuery();
 
 		System.out.println("\nYield");
-		System.out.println(res.nextInt(1));
+		System.out.println(res.getInt(1));
 
 		// prints the total value of all money deposited or withdrawn by the customer
 		query = "select sum(price) from TRXLOG where login = ?";
@@ -353,6 +353,6 @@ public class Customer {
 		res.next();
 
 		System.out.println("\nTotal Value");
-		System.out.println(res.nextFloat(1));
+		System.out.println(res.getFloat(1));
 	}
 }
