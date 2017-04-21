@@ -186,8 +186,8 @@ public class Customer {
 	 *	and the customer object's balance is updated as well
 	 */
 	public void sell(String symbol, int shares) {
-		float total_price;
-		float price_of_one_share;
+		float total_price = 0;
+		float price_of_one_share = 0;
 
 		//** sql **//
 		try {
@@ -275,7 +275,7 @@ public class Customer {
 		else if (choice == 2) {
 			System.out.print("How much would you like to spend? ");
 			float total_price = kb.nextFloat();
-			int shares;
+			int shares = 0;
 			float price_of_one_share;
 
 			if (total_price > balance)
