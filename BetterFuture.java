@@ -372,13 +372,13 @@ public class BetterFuture {
 				System.out.println("The username or password is incorrect.");
 				System.exit(0);
 			}
-
-			return new Customer(login, name, email, address, balance);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(0);
 		}
+
+		return new Customer(login, name, email, address, balance);
 
 	} // end customerLogin()
 
