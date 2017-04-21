@@ -120,9 +120,15 @@ public class BetterFuture {
 						String customerAddress = kb.next();
 
 						// embedded sql
-						// insert function will be included here
-						// INSERT INTO CUSTOMER(customerLog, customerName, customerEmail,
-					  //											customerAddress, customerPass, NULL);
+						String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, NULL)";
+						PreparedStatement ps = connection.prepareStatement(query);
+						ps.setString(1, customerLog);
+						ps.setString(2, customerName);
+						ps.setString(3, customerEmail);
+						ps.setString(4, customerAddress);
+						ps.setString(5, customerPass);
+						ps.executeUpdate();
+						// sql
 
 						System.out.println("\nCustomer data has been stored successfully!\n");
 					}

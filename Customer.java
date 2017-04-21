@@ -155,8 +155,12 @@ public class Customer {
 	// this doesn't check to make sure all the possible mutual funds can be bought
 	public void invest(float total_amount) {
 		//** sql **//
-		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(trans_id++, login, currDate, 'deposit', total_amount)";
+		update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(?, ?, ?, 'deposit', ?)";
 		ps = connection.prepareStatement(update);
+		ps.setInt(1, trans_id++);
+		ps.setString(2, login);
+		ps.setDate(3, currDate);
+		ps.setFloat(4, total_amount);
 		ps.executeUpdate();
 		// this triggers 'on_insert_log'
 		//** sql **//
@@ -185,8 +189,15 @@ public class Customer {
 		total_price = res.getInt(1);
 		price_of_one_share = res.getInt(2);
 
-		update = "insert into TRXLOG values(trans_id++, login, symbol, currDate, 'sell', shares, price_of_one_share, total_price)";
+		update = "insert into TRXLOG values(?, ?, ?, ?, 'sell', ?, ?, ?)";
 		ps = connection.prepareStatement(update);
+		ps.setInt(1, trans_id++);
+		ps.setString(2, login);
+		ps.setString(3, symbol);
+		ps.setDate(4, currDate);
+		ps.setInt(5, shares);
+		ps.setFloat(6, price_of_one_share);
+		ps.setFloat(7, total_price);
 		ps.executeUpdate();
 		// this will trigger 'increase_customer_balance'
 		//** sql **//
@@ -228,9 +239,17 @@ public class Customer {
 
 				//** sql **//
 				// try to insert an entry into trxlog
-				update = "insert into TRXLOG values(trans_id++, login, symbol, currDate, 'buy', shares, price_of_one_share, total_price)";
+				update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
 				ps = connection.prepareStatement(update);
+				ps.setInt(1, trans_id++);
+				ps.setString(2, login);
+				ps.setString(3, symbol);
+				ps.setDate(4, currDate);
+				ps.setInt(5, shares);
+				ps.setFloat(6, price_of_one_share);
+				ps.setFloat(7, total_price);
 				ps.executeUpdate();
+
 				// this will trigger 'decrease_customer_balance'
 				//** sql **/
 			}
@@ -281,8 +300,8 @@ public class Customer {
 	}
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
-	public void printPortfolio(String input_date) {
-		java.sql.Date input = new java.sql.Date(input);
+	public void printPortfolio(String input) {
+		java.sql.Date input_date = new java.sql.Date(input);
 
 		// printing the symbol, price, and number of shares bought on a specific date
 		// as well as the current price of the mutual fund
