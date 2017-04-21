@@ -9,8 +9,8 @@ insert into MUTUALFUND values ('MM', 'money-market', 'money market, conservative
 insert into MUTUALFUND values ('RE', 'real-estate', 'real estate', 'fixed', '09-JAN-14');
 insert into MUTUALFUND values ('STB', 'short-term-bonds', 'short term bonds', 'bonds', '10-JAN-14');
 insert into MUTUALFUND values ('LTB', 'long-term-bonds', 'long term bonds', 'bonds', '11-JAN-14');
-insert into MUTUALFUND values ('BBS', 'balanced-bonds-stocks', 'balanced bonds and stocks', 'mixed', '12-JAN-14');	
-insert into MUTUALFUND values ('SRBS', 'social-respons-bonds-stocks', 'social responsibility bonds and stocks', 'mixed', '12-JAN-14');
+insert into MUTUALFUND values ('BBS', 'balance-bonds-stocks', 'balanced bonds and stocks', 'mixed', '12-JAN-14');	
+insert into MUTUALFUND values ('SRBS', 'social-responsibility-bonds-stocks', 'social responsibility bonds and stocks', 'mixed', '12-JAN-14');
 insert into MUTUALFUND values ('GS', 'general-stocks', 'general stocks', 'stocks', '16-JAN-14');
 insert into MUTUALFUND values ('AS', 'aggressive-stocks', 'aggressive stocks', 'stocks', '23-JAN-14');
 insert into MUTUALFUND values ('IMS', 'international-markets-stock', 'international markets stock, risky', 'stocks', '30-JAN-14');
@@ -36,3 +36,5 @@ insert into PREFERS values (2, 'AS', .3);
 insert into PREFERS values (2, 'IMS', .4);
 
 insert into CLOSINGPRICE values ('MM', 10, '28-MAR-14');
+
+commit;
