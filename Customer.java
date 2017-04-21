@@ -1,6 +1,5 @@
 import java.util.*;
 import java.sql.*;
-import oracle.jdbc.driver.*;
 
 public class Customer {
 	private static String login;
@@ -35,8 +34,8 @@ public class Customer {
 		this.address = address;
 		this.balance = balance;
 
-		statement = connection.createStatement("select MAX(trans_id) from TRXLOG");
-		res = statement.executeQuery();
+		statement = connection.createStatement();
+		res = statement.executeQuery("select MAX(trans_id) from TRXLOG");
 		trans_id = res.getInt(1) + 1;
 
 		java.util.Date today = new java.util.Date();
@@ -50,8 +49,8 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			statement = connection.createStatement("select * from MUTUALFUND");
-			res = statement.executeQuery();
+			statement = connection.createStatement();
+			res = statement.executeQuery("select * from MUTUALFUND");
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
 			while (res.next()) {
@@ -114,8 +113,8 @@ public class Customer {
 
 		// prints all the mutual funds in order by name ascending
 		else {
-			statement = connection.createStatement("select * from MUTUALFUND order by name asc");
-			res = statement.executeQuery();
+			statement = connection.createStatement();
+			res = statement.executeQuery("select * from MUTUALFUND order by name asc");
 
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
@@ -345,7 +344,7 @@ public class Customer {
 
 		// prints the total value of all money deposited or withdrawn by the customer
 		query = "select sum(price) from TRXLOG where login = ?";
-		PreparedStatement ps = connection.prepareStatement(query);
+		ps = connection.prepareStatement(query);
 		ps.setString(1, login);
 
 		res = ps.exectueQuery();

@@ -1,7 +1,6 @@
 import java.util.*;
 import java.sql.*;
 import java.lang.*;
-import oracle.jdbc.driver.*;
 
 public class BetterFuture {
 
@@ -46,7 +45,7 @@ public class BetterFuture {
 	// interface used for the administrator
 	public static void adminInterface() {
 		int menuChoice = 0;
-		Admin admin - new Admin();
+		Admin admin = new Admin();
 		admin = adminLogin();
 
 		while (menuChoice < 6) {
@@ -423,6 +422,7 @@ public class BetterFuture {
 		String name = "";
 		String email = "";
 		String address = "";
+		float balance;
 
 		//** embedded sql **//
 		//call check_login_admin(login, real_password, name, email, address);

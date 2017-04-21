@@ -8,7 +8,7 @@ public class Admin {
   String name;
   String email;
   String address;
-  public static Scanner = new Scanner(System.in);
+  public static Scanner kb = new Scanner(System.in);
   private Connection connection;
   private BufferedReader br;
 
