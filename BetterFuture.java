@@ -65,8 +65,7 @@ public class BetterFuture {
 					boolean ifSuccess = false;
 					System.out.println("Is the new user and administrator? (Y/N)");
 					String isAdmin = kb.next();
-					isAdmin = charAt(0).toUpperCase(isAdmin);
-					if (isAdmin == 'Y') {
+					if (isAdmin.charAt(0) == 'Y') {
 						// insert new login into Admin db
 						System.out.println("Please enter the following information:");
 						System.out.println("New Login: ");
@@ -99,7 +98,7 @@ public class BetterFuture {
 						System.out.println("New Login: ");
 						String customerLog = kb.next();
 						// confirm login is okay
-						while (admin.checkLogin(adminLog, false) != true) {
+						while (admin.checkLogin(customerLog, false) != true) {
 							System.out.println("This login already exists. Please enter a new one.");
 							System.out.print("New Login: \n");
 							customerLog = kb.next();
@@ -181,7 +180,7 @@ public class BetterFuture {
 					fund = kb.next();
 					System.out.println("What categroy will this fund be put under: ");
 					System.out.println("\t1. Bonds\n\t2. Stocks\n\t3. Fixed\n\t4. Mixed");
-					cat = kb.next();
+					cat = kb.nextInt();
 					// Possibly do category check here instead of the SQL level?
 					switch(cat) {
 						case 1:
@@ -222,9 +221,10 @@ public class BetterFuture {
 					int monthNum;
 					int top;
 					System.out.println("How many past months of information would you like to see? ");
-					monthNum = kb.next();
+					monthNum = kb.nextInt();
 					System.out.println("Please enter the top number of highest volume categories and "
 															+"investors you would like to see.");
+					top = kb.nextInt();
 					admin.printStats(monthNum, top);
 					break;
 				// EXIT
@@ -349,10 +349,10 @@ public class BetterFuture {
 		String login = kb.next();
 		System.out.println("Password: ");
 		String password = kb.next();
-		String name;
-		String email;
-		String address;
-		float balance;
+		String name = "";
+		String email = "";
+		String address = "";
+		float balance = 0;
 
 		try {
 			statement = connection.createStatement();
@@ -379,7 +379,6 @@ public class BetterFuture {
 		}
 
 		return new Customer(login, name, email, address, balance);
-
 	} // end customerLogin()
 
 	// Retrieves admin login information
@@ -397,7 +396,7 @@ public class BetterFuture {
 		//call check_login_admin(login, real_password, name, email, address);
 		//** embedded sql **//
 
-		if (password.compareToIgnoreCase(real_password) != 0 || real_password == NULL) {
+		if (password.compareToIgnoreCase(real_password) != 0 || real_password == null) {
 			System.out.println("The username or password is incorrect or you are not authorized"
 													+" login in as an administrator.");
 			System.exit(1);
