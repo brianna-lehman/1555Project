@@ -282,7 +282,48 @@ public class Customer {
 	}
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
-	public void printPortfolio(String date) {
-		//call customer_profile(?date?, login);
+	public void printPortfolio(String input_date) {
+		// printing the symbol, price, and number of shares bought on a specific date
+		// as well as the current price of the mutual fund
+		query = "select trx.symbol, trx.price, trx.num_shares, cp.price "+
+				"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
+				"where t_date = ? and login = ?";
+		ps = connection.prepareStatement(query);
+		ps.setDate(input_date);
+		ps.setString(login);
+
+		res = ps.executeQuery();
+
+		System.out.println("Symbol\tPrice\tNumber of Shares\tCurrent Value");
+
+		while (res.next()) {
+			System.out.print(res.getString(1)+"\t");
+			System.out.print(res.getString(2)+"\t");
+			System.out.print(res.getInt(3)+"\t");
+			System.out.print(res.getFloat(4)+"\t\n");
+		}
+
+		// finds the yield of the customer's portfolio by subtracting the mutual funds
+		// that were bought from the mutual funds that were sold
+		query = "select sum(price) - (select sum(price) from TRXLOG where login = ? and action = 'buy') "+
+				"from TRXLOG where login = ? and action = 'sell'";
+		ps = connection.prepareStatement(query);
+		ps.setString(1, login);
+		ps.setString(2, login);
+
+		res = ps.executeQuery();
+
+		System.out.println("\nYield");
+		System.out.println(res.nextInt(1));
+
+		// prints the total value of all money deposited or withdrawn by the customer
+		query = "select sum(price) from TRXLOG where login = ?";
+		ps = connection.prepareStatement(query);
+		ps.setString(1, login);
+
+		res = ps.exectueQuery();
+
+		System.out.println("\nTotal Value");
+		System.out.println(res.nextFloat(1));
 	}
 }
