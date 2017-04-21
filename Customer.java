@@ -309,7 +309,7 @@ public class Customer {
 	/** Calls a procedure that prints all transactions that this user has implemented */
 	public void printPortfolio(String input_date) {
 		java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-mm-dd");
-		java.sql.Date t_date = new java.sql.Date(df.parse(input).getTime());
+		java.sql.Date t_date = new java.sql.Date(df.parse(input_date).getTime());
 
 		// printing the symbol, price, and number of shares bought on a specific date
 		// as well as the current price of the mutual fund
