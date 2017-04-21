@@ -35,8 +35,8 @@ public class Customer {
 		this.address = address;
 		this.balance = balance;
 
-		ps = connection.prepareStatement("select MAX(trans_id) from TRXLOG");
-		res = ps.executeQuery();
+		statement = connection.createStatement("select MAX(trans_id) from TRXLOG");
+		res = statement.executeQuery();
 		trans_id = res.getInt(1) + 1;
 
 		java.util.Date today = new java.util.Date();
@@ -50,8 +50,8 @@ public class Customer {
 
 		// prints the entire mutual fund table if the user choses 1 or types in a number that isn't an option
 		if (choice <= 1 || choice > 4) {
-			ps = connection.prepareStatement("select * from MUTUALFUND");
-			res = ps.executeQuery();
+			statement = connection.createStatement("select * from MUTUALFUND");
+			res = statement.executeQuery();
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
 			while (res.next()) {
@@ -114,8 +114,8 @@ public class Customer {
 
 		// prints all the mutual funds in order by name ascending
 		else {
-			ps = connection.prepareStatement("select * from MUTUALFUND order by name asc");
-			res = ps.executeQuery();
+			statement = connection.createStatement("select * from MUTUALFUND order by name asc");
+			res = statement.executeQuery();
 
 			System.out.println("Symbol\tName\tDescription\tCategory");
 
@@ -279,8 +279,15 @@ public class Customer {
 				total_price = res.getInt(1);
 				price_of_one_share = res.getInt(2);
 
-				update = "insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', shares, price_of_one_share, total_price)";
+				update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
 				ps = connection.prepareStatement(update);
+				ps.setInt(1, trans_id++);
+				ps.setString(2, login);
+				ps.setString(3, symbol);
+				ps.setDate(4, currDate);
+				ps.setInt(5, shares);
+				ps.setFloat(6, price_of_one_share);
+				ps.setFloat(7, total_price);
 				ps.executeUpdate();
 				// this will trigger 'decrease_customer_balance'
 				//** sql **//

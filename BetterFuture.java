@@ -128,7 +128,7 @@ public class BetterFuture {
 
 						// embedded sql
 						String update = "insert into CUSTOMER values (?, ?, ?, ?, ?, 0)";
-						PreparedStatement ps = connection.prepareStatement(query);
+						PreparedStatement ps = connection.prepareStatement(update);
 						ps.setString(1, customerLog);
 						ps.setString(2, customerName);
 						ps.setString(3, customerEmail);
@@ -388,7 +388,6 @@ public class BetterFuture {
 		float balance = 0;
 
 		try {
-			statement = connection.createStatement();
 			query = "select * from CUSTOMER where login = ? and password = ?";
 			PreparedStatement updateStatement = connection.prepareStatement(query);
 			updateStatement.setString(1, login);
@@ -427,13 +426,30 @@ public class BetterFuture {
 
 		//** embedded sql **//
 		//call check_login_admin(login, real_password, name, email, address);
-		//** embedded sql **//
+		try {
+			query = "select * from ADMINISTRATOR where login = ? and password = ?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, login);
+			ps.setString(2, password);
+			resultSet = ps.executeQuery();
 
-		if (password.compareToIgnoreCase(real_password) != 0 || real_password == null) {
-			System.out.println("The username or password is incorrect or you are not authorized"
-													+" login in as an administrator.");
-			System.exit(1);
+			if (resultSet.next()) {
+				name = resultSet.getString("name");
+				email = resultSet.getString("email");
+				address = resultSet.getString("address");
+				balance = resultSet.getFloat("balance");
+			}
+			else {
+				System.out.println("The username or password is incorrect.");
+				System.exit(0);
+			}
 		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(0);
+		}
+
+		//** embedded sql **//
 
 		return new Admin(login, name, email, address);
 	} // end adminLogin()
