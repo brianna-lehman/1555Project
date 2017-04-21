@@ -347,7 +347,7 @@ public class Customer {
 		ps = connection.prepareStatement(query);
 		ps.setString(1, login);
 
-		res = ps.exectueQuery();
+		res = ps.executeQuery();
 		res.next();
 
 		System.out.println("\nTotal Value");
