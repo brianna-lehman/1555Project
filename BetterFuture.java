@@ -357,17 +357,18 @@ public class BetterFuture {
 			}
 			// if user wants to see there porfolio
 			else if (menuChoice == 8) {
-				String date = "";
+				StringBuilder date = new StringBuilder();
 				System.out.println("Please enter a date in number format.");
 				System.out.print("Year (yyyy): ");
 				String year = kb.next();
+				date.append(year+"-");
 				System.out.print("Month (mm): ");
 				String month = kb.next();
+				date.append(month+"-");
 				System.out.print("Day (dd): ");
 				String day = kb.next();
-				// Concatenate
-				date = year + "-" + month + "-" + day;
-				customer.printPortfolio(date);
+				date.append(day);
+				customer.printPortfolio(date.toString());
 			}
 		} // end while
 	} // end customerInterface()

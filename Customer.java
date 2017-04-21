@@ -38,8 +38,9 @@ public class Customer {
 		res = statement.executeQuery("select MAX(trans_id) from TRXLOG");
 		trans_id = res.getInt(1) + 1;
 
-		java.util.Date today = new java.util.Date();
-		currDate = new java.sql.Date(today.getTime());
+		// hard coded date because I couldn't figure out how to get date to work
+		java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		currDate = new java.sql.Date(df.parse("2017-04-21").getTime());
 	}
 
 	/** The user inputs a choice from a text menu,
@@ -306,8 +307,9 @@ public class Customer {
 	}
 
 	/** Calls a procedure that prints all transactions that this user has implemented */
-	public void printPortfolio(String input) {
-		java.sql.Date input_date = new java.sql.Date(input);
+	public void printPortfolio(String input_date) {
+		java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-mm-dd");
+		java.sql.Date t_date = new java.sql.Date(df.parse(input).getTime());
 
 		// printing the symbol, price, and number of shares bought on a specific date
 		// as well as the current price of the mutual fund
@@ -315,7 +317,7 @@ public class Customer {
 				"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
 				"where t_date = ? and login = ?";
 		ps = connection.prepareStatement(query);
-		ps.setDate(1, input_date);
+		ps.setDate(1, t_date);
 		ps.setString(2, login);
 
 		res = ps.executeQuery();
