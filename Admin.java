@@ -111,16 +111,19 @@ public class Admin {
   // updates the time and date requested from the administrator
   public void updateTime() {
     try {
-      ps = connection.prepareStatement("select to_char(sysdate) as today from dual ");
+      query = "select to_char(sysdate) as today from dual";
+      ps = connection.prepareStatement(query);
       res = ps.executeQuery();
       res.next();
       // Print current date
       System.out.println("Today's date is: \n\t\t" + res.getString("today"));
       System.out.println("Updating time and date...");
 
-      ps = connection.prepareStatement("delete from MUTUALDATE");
+      update = "delete from MUTUALDATE";
+      ps = connection.prepareStatement(update);
       ps.executeQuery();
-      ps = connection.prepareStatement("insert into MUTUALDATE values (to_date();(sysdate))");
+      update = "insert into MUTUALDATE values (to_date();(sysdate))";
+      ps = connection.prepareStatement(update);
       ps.executeQuery
     } catch (Exception e) { e.printStackTrace(); }
     // Update confirmation
@@ -129,6 +132,44 @@ public class Admin {
 
   // prints current stats specifed by the admin
   public void printStats(int monthNum, int topK) {
+    int count = 0;
+    // gets date
     
+
+    try {
+      // Categories
+      query = "select symbol, sum(amount) from TRXLOG where action <> 'deposit'"
+              + "and action <> 'sell' and trunc(t_date) between to_date(?)"
+              + "and to_date(sysdate) group by login order by sum(amount) desc";
+      ps = connection.prepareStatement(query);
+      ps.setString(1, date);
+      res = ps.executeQuery();
+      // Display
+      System.out.println("Here are the categories.. ");
+      System.out.println("\tSymbol: \t\tSum: ");
+      while (topK >= count) {
+        res.next();
+        System.out.println("\t" + res.getString("symbol") + " \t\t" + res.getString("sum(amount)"));
+        count++;
+      } // end while
+
+      // TopK Users
+      query = "select login, sum(amount) from TRXLOG where action <> 'deposit'"
+              + "and action <> 'sell' and trunc(t_date) between to_date(?)"
+              + "and to_date(sysdate) group by login order by sum(amount) desc";
+      ps = connection.prepareStatement(query);
+      ps.setString(1, date);
+      res = ps.executeQuery();
+      // Display
+      System.out.println("\nHere are top investors.. ");
+      System.out.println("\Login: \t\tSum: ");
+      count = 0;
+      while (topK >= count) {
+        res.next();
+        System.out.println("\t" + res.getString("login") + "\t\t" + res.getString("sum(amount)"));
+        count++;
+      } // end while
+    } catch (Exception e) { e.printStackTrace(); }
   } // end printStats(int, int)
+
 }

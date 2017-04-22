@@ -242,11 +242,27 @@ public class BetterFuture {
 				case 5:
 					int monthNum;
 					int top;
-					System.out.print("How many past months of information would you like to see? ");
+
+					System.out.print("How many past months of information would you like to see?: ");
 					monthNum = kb.nextInt();
+					// checks for valid month inout
+					while (monthNum < 0) {
+						System.out.println("Error: Number of months cannot be below zero.");
+						System.out.print("How many past months of information would you like to see?: ");
+						monthNum = kb.nextInt();
+					} // end while
+
 					System.out.print("Please enter the top number of highest volume categories and "
-															+"investors you would like to see.");
+															+"investors you would like to see: ");
 					top = kb.nextInt();
+					// check for valid topk input
+					while (top < 0) {
+						System.out.println("Error: Number cannot be below zero.");
+						System.out.print("Please enter the top number of highest volume categories and "
+																+"investors you would like to see: ");
+						top = kb.nextInt();
+					} // end while
+					// print stats
 					admin.printStats(monthNum, top);
 					break;
 				// EXIT
@@ -412,7 +428,6 @@ public class BetterFuture {
 			ex.printStackTrace();
 			System.exit(0);
 		}
-
 		return new Customer(login, name, email, address, balance);
 	} // end customerLogin()
 
