@@ -110,7 +110,7 @@ public class Admin {
 
   // updates the time and date requested from the administrator
   public void updateTime(String time, String date) {
-  System.out.println("The time and date have been updated successfully!");
+    System.out.println("The time and date have been updated successfully!");
   } // end updateTime(String, String)
 
   public void printStats(int monthNum, int topK) {
