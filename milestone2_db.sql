@@ -23,6 +23,24 @@ create or replace procedure specific_customer_preferences (in user_login varchar
 	end;
 /
 
+create or replace trigger increment_transID 
+	before insert on TRXLOG
+	for each row
+	begin
+		select max(trans_id)+1 into :new.trans_id
+		from TRXLOG;
+	end;
+/
+
+create or replace trigger increment_allocNo
+	before insert on ALLOCATION
+	for each row
+	begin
+		select max(trans_id) + 1 into :new.allocation_no
+		from ALLOCATION;
+	end;
+/
+
 -- trigger to increase the customer balance when a 'sell' action is inserted into the trxlog table
 create or replace trigger increase_customer_balance
 	before insert on TRXLOG
@@ -32,6 +50,10 @@ create or replace trigger increase_customer_balance
 		update CUSTOMER
 		set balance = balance + :new.amount;
 		where login = :new.login;
+
+		update OWNS
+		set shares = shares - :new.num_shares;
+		where login = :new.login and symbol = :new.symbol;
 	end;
 /
 
@@ -41,9 +63,35 @@ create or replace trigger decrease_customer_balance
 	for each row
 	when (new.action = 'buy')
 	begin
-		update CUSTOMER
-		set balance = balance - :new.amount;
+		select balance 
+		from CUSTOMER
 		where login = :new.login;
+
+		-- the customer has enough money to buy this amount of shares 
+		if balance >= :new.amount
+		then
+			update CUSTOMER
+			set balance = balance - :new.amount
+			where login = :new.login;
+		end if;
+
+		-- incrementing the number of share the customer owns with the new amount 
+		select count(*)
+		from OWNS
+		where login = :new.login and symbol = :new.symbol;
+
+		if count(*) = 0
+		then
+			insert into OWNS values(:new.login, :new.symbol, :new.num_shares);
+		else
+			select shares
+			from OWNS
+			where login = :new.login and symbol = :new.symbol;
+
+			update OWNS
+			set shares = shares + :new.num_shares
+			where login = :new.login and symbol = :new.symbol;
+		end if;
 	end;
 /
 
@@ -51,7 +99,7 @@ create or replace trigger decrease_customer_balance
 -- Trigger set to insert buy transcations following the deposit insert into log
 -- when a deposit is made, it is assumed that the deposit money is going towards
 -- a buy to the customers mutual funds (the ones that preferenced)
-create or replace trigger on_insert_log
+create or replace trigger on_deposit_log
 	after insert on TRXLOG
 	for each row
 	when (new.action = 'deposit')
@@ -59,11 +107,19 @@ create or replace trigger on_insert_log
 		-- the code below will be included into this trigger. this trigger is an 
 		-- attempt of getting the information needed to update the shares bought
 		-- using the preferences listed by the user in the mutual funds
+		declare amount_to_invest float;
+		declare num_shares int;
+		declare single_price float;
 
-		-- for every tuple in the table from specific_customer_preferences
-			-- int amount_to_invest = amount * percentage
+		-- for every tuple in the table ALLOCxPREF where login = :new.login
+			amount_to_invest = :new.amount * percentage;
+
 			-- call procedure num_shares_from_input_price(symbol, amount_to_invest, int num_shares, int share_price)
+			select round(amount_to_invest/price, 0, 1) into num_shares, price into single_price
+			from MUTUALFUND natural join CLOSINGPRICE
+			where symbol = :new.symbol; 
 			-- insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', num_shares, share_price, amount_to_invest);
+			insert into TRXLOG values(1, :new.login, :new.symbol, :new.t_date, 'buy', num_shares, single_price, amount_to_invest);
 	end;
 /
 

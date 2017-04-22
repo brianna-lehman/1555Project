@@ -7,7 +7,6 @@ public class Customer {
 	private static String email;
 	private static String address;
 	private static float balance;
-	private static int trans_id;
 	private static java.sql.Date currDate;
 	public static Scanner kb = new Scanner(System.in);
 	private Connection connection;
@@ -28,10 +27,6 @@ public class Customer {
 			this.email = email;
 			this.address = address;
 			this.balance = balance;
-
-			statement = connection.createStatement();
-			res = statement.executeQuery("select MAX(trans_id) from TRXLOG");
-			trans_id = res.getInt(1) + 1;
 
 			// hard coded date because I couldn't figure out how to get date to work
 			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -167,12 +162,11 @@ public class Customer {
 	public void invest(float total_amount) {
 		//** sql **//
 		try {
-			update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(?, ?, ?, 'deposit', ?)";
+			update = "insert into TRXLOG(trans_id, login, t_date, action, amount) values(1, ?, ?, 'deposit', ?)";
 			ps = connection.prepareStatement(update);
-			ps.setInt(1, trans_id++);
-			ps.setString(2, login);
-			ps.setDate(3, currDate);
-			ps.setFloat(4, total_amount);
+			ps.setString(1, login);
+			ps.setDate(2, currDate);
+			ps.setFloat(3, total_amount);
 			ps.executeUpdate();
 			// this triggers 'on_insert_log'
 		} catch (Exception ex) { ex.printStackTrace(); }
@@ -202,15 +196,14 @@ public class Customer {
 			total_price = res.getInt(1);
 			price_of_one_share = res.getInt(2);
 
-			update = "insert into TRXLOG values(?, ?, ?, ?, 'sell', ?, ?, ?)";
+			update = "insert into TRXLOG values(1, ?, ?, ?, 'sell', ?, ?, ?)";
 			ps = connection.prepareStatement(update);
-			ps.setInt(1, trans_id++);
-			ps.setString(2, login);
-			ps.setString(3, symbol);
-			ps.setDate(4, currDate);
-			ps.setInt(5, shares);
-			ps.setFloat(6, price_of_one_share);
-			ps.setFloat(7, total_price);
+			ps.setString(1, login);
+			ps.setString(2, symbol);
+			ps.setDate(3, currDate);
+			ps.setInt(4, shares);
+			ps.setFloat(5, price_of_one_share);
+			ps.setFloat(6, total_price);
 			ps.executeUpdate();
 			// this will trigger 'increase_customer_balance'
 		} catch (Exception ex) { ex.printStackTrace(); }
@@ -254,15 +247,14 @@ public class Customer {
 
 					//** sql **//
 					// try to insert an entry into trxlog
-					update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
+					update = "insert into TRXLOG values(1, ?, ?, ?, 'buy', ?, ?, ?)";
 					ps = connection.prepareStatement(update);
-					ps.setInt(1, trans_id++);
-					ps.setString(2, login);
-					ps.setString(3, symbol);
-					ps.setDate(4, currDate);
-					ps.setInt(5, shares);
-					ps.setFloat(6, price_of_one_share);
-					ps.setFloat(7, total_price);
+					ps.setString(1, login);
+					ps.setString(2, symbol);
+					ps.setDate(3, currDate);
+					ps.setInt(4, shares);
+					ps.setFloat(5, price_of_one_share);
+					ps.setFloat(6, total_price);
 					ps.executeUpdate();
 
 					// this will trigger 'decrease_customer_balance'
@@ -292,20 +284,22 @@ public class Customer {
 
 					res = ps.executeQuery();
 
-					total_price = res.getInt(1);
+					shares = (int)res.getFloat(1);
 					price_of_one_share = res.getInt(2);
 
-					update = "insert into TRXLOG values(?, ?, ?, ?, 'buy', ?, ?, ?)";
+					update = "insert into TRXLOG values(1, ?, ?, ?, 'buy', ?, ?, ?)";
 					ps = connection.prepareStatement(update);
-					ps.setInt(1, trans_id++);
-					ps.setString(2, login);
-					ps.setString(3, symbol);
-					ps.setDate(4, currDate);
-					ps.setInt(5, shares);
-					ps.setFloat(6, price_of_one_share);
-					ps.setFloat(7, total_price);
+					ps.setString(1, login);
+					ps.setString(2, symbol);
+					ps.setDate(3, currDate);
+					ps.setInt(4, shares);
+					ps.setFloat(5, price_of_one_share);
+					ps.setFloat(6, total_price);
 					ps.executeUpdate();
 					// this will trigger 'decrease_customer_balance'
+
+					balance -= total_price;
+
 				} catch (Exception ex) { ex.printStackTrace(); }
 				//** sql **//
 			}
