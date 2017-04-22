@@ -13,13 +13,10 @@ public class BetterFuture {
 
 	public static void main(String[] args) {
 
-		String username = "bml49";
-		String password = "3985224";
-
 		try {
 			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 			String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
-			connection = DriverManager.getConnection(url, username, password);
+			connection = DriverManager.getConnection(url, "bml49", "3985224");
 		}
 		catch(Exception ex) {
 			System.out.println("Error connecting to database.");
@@ -212,7 +209,7 @@ public class BetterFuture {
 					System.out.println("What category will this fund be put under: ");
 					System.out.println("\t1. Bonds\n\t2. Stocks\n\t3. Fixed\n\t4. Mixed");
 					cat = kb.nextInt();
-					
+
 					// Possibly do category check here instead of the SQL level?
 					switch(cat) {
 						case 1:
