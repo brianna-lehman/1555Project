@@ -236,16 +236,7 @@ public class BetterFuture {
 					break;
 				// UPDATE THE TIME AND DATE
 				case 4:
-					String time;
-					String date;
-					System.out.println("Here is the current time and date");
-					// Embedded SQL code
-					// Display time and date
-					System.out.println("What would you like to update the time to: ");
-					time = kb.next();
-					System.out.println("What would you like to upate the date to (dd-mm-yy): ");
-					date = kb.next();
-					admin.updateTime(time, date);
+					admin.updateTime();
 					break;
 				// VIEW CURRENT STATISTICS
 				case 5:

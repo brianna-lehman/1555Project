@@ -35,7 +35,7 @@ public class Admin {
   public boolean checkLogin(String userlogin, boolean isAdmin) {
     boolean exists = false;
     // if user is an admin
-    if (isAdmin == true) 
+    if (isAdmin == true)
       query = "select count(login) from ADMINISTRATOR where login = ?";
 
     // if registered user is a customer
@@ -50,7 +50,7 @@ public class Admin {
       if (res.getInt(1) == 0)
         exists = false;
 
-      else 
+      else
         exists = true;
     } catch (Exception ex) { ex.printStackTrace(); }
 
@@ -109,11 +109,26 @@ public class Admin {
   } // end addFund(String, String)
 
   // updates the time and date requested from the administrator
-  public void updateTime(String time, String date) {
+  public void updateTime() {
+    try {
+      ps = connection.prepareStatement("select to_char(sysdate) as today from dual ");
+      res = ps.executeQuery();
+      res.next();
+      // Print current date
+      System.out.println("Today's date is: \n\t\t" + res.getString("today"));
+      System.out.println("Updating time and date...");
+
+      ps = connection.prepareStatement("delete from MUTUALDATE");
+      ps.executeQuery();
+      ps = connection.prepareStatement("insert into MUTUALDATE values (to_date();(sysdate))");
+      ps.executeQuery
+    } catch (Exception e) { e.printStackTrace(); }
+    // Update confirmation
     System.out.println("The time and date have been updated successfully!");
   } // end updateTime(String, String)
 
+  // prints current stats specifed by the admin
   public void printStats(int monthNum, int topK) {
-
+    
   } // end printStats(int, int)
 }
