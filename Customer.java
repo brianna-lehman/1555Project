@@ -214,7 +214,7 @@ public class Customer {
 		balance += total_price;
 	}
 
-	/** user can chose to buy mutual funds based on number of shares or price 
+	/** user can chose to buy mutual funds based on number of shares or price
 	 *	this data gets inserted into the trxlog which triggers a decrease on customer's balance
 	 *	and puts the newly owned funds into the owns table
 	 */
@@ -308,17 +308,18 @@ public class Customer {
 				//** sql **//
 			}
 		}
-
 		// incorrect input
 		else System.out.println("Your only options are 1 and 2");
 	}
 
+	// invest with condiiions
 	public void conditionInvest() {
-
+		System.out.println("This option doesn't work at the moment");
 	}
 
+ 	// change allocation preferences
 	public void changePreference(int alloc_number) {
-
+		
 	}
 
 	/** prints all transactions that this user has implemented */

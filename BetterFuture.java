@@ -225,10 +225,9 @@ public class BetterFuture {
 								break;
 						default:
 								System.out.println("Error: Please try again.");
+						admin.addFund(symbol, name, description, category);
+
 					} // end switch
-
-					admin.addFund(symbol, name, description, category);
-
 					break;
 				// UPDATE THE TIME AND DATE
 				case 4:
