@@ -279,7 +279,7 @@ public class Customer {
 			else {
 				//** sql **//
 				try {
-					query = "?/price, price "+
+					query = "round(?/price, 0, 1), price "+
 							"from MUTUALFUND natural join CLOSINGPRICE "+
 							"where symbol = ?";
 					ps = connection.prepareStatement(query);
