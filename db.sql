@@ -14,7 +14,7 @@ purge recyclebin;
 -- Table listing the information of a variety of mutual funds, categorized appropriately
 create table MUTUALFUND (
 	symbol varchar2(20),
-	name varchar2(30),
+	name varchar2(40),
 	description varchar2(100),
 	category varchar2(10),
 	c_date date,
@@ -117,5 +117,5 @@ create table MUTUALDATE (
 	c_date date,
 	constraint pk_mutdate primary key(c_date) deferrable initially immediate
 );
-	
+
 commit;
