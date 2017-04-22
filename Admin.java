@@ -171,7 +171,7 @@ public class Admin {
       ps.setString(1, date);
       res = ps.executeQuery();
       // Display
-      System.out.println("\nHere are top investors.. ");
+      System.out.println("\nHere are top investors by login.. ");
       System.out.println("\tLogin: \t\tSum: ");
       count = 0;
       while (topK >= count) {
