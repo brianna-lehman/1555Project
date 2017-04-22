@@ -10,7 +10,10 @@ public class Admin {
   String address;
   public static Scanner kb = new Scanner(System.in);
   private Connection connection;
-  private BufferedReader br;
+  private Statement statement;
+  private ResultSet res;
+  private String query, update;
+  private PreparedStatement ps;
 
   public Admin() {
     try {
@@ -30,57 +33,84 @@ public class Admin {
 
   // checks if the login has been used before in either db
   public boolean checkLogin(String userlogin, boolean isAdmin) {
-    boolean ifExists = false;
+    boolean exists = false;
     // if user is an admin
-    if (isAdmin == true) {
-      // Embedded SQL code
-      // IF EXISTS (SELECT login FROM ADMINISTRATOR WHERE l0gin = userlogin)
-      // BEGIN
-      // return false;
-      // ELSE
-      // BEGIN
-      // return true;
+    if (isAdmin == true) 
+      query = "select count(login) from ADMINISTRATOR where login = ?";
+
     // if registered user is a customer
-    } else {
-      // Embedded SQL code
-      // IF EXISTS (SELECT login FROM CUStOMER WHERE l0gin = userlogin)
-      // BEGIN
-      // return false;
-      // ELSE
-      // BEGIN
-      // return true;
-    }
-    return false;
+    else
+      query = "select count(login) from CUSTOMER where login = ?";
+
+    try {
+      ps = connection.prepareStatement(query);
+      ps.setString(1, userlogin);
+      res = ps.executeQuery();
+
+      if (res.getInt(1) == 0)
+        exists = false;
+
+      else 
+        exists = true;
+    } catch (Exception ex) { ex.printStackTrace(); }
+
+    return exists;
   } // end checkLogin
 
   // updates the shares in the specified mutual fund
   public void updateShare(String choice) {
-    Scanner kb = new Scanner(System.in);
     System.out.println("Here are the following share quotes for this mutual fund:");
-    // Embedded SQL code
-    // select *
-    // from CLOSINGPRICE
-    // where name = choice
-    System.out.print("What price would you like to update the shares to: $");
-    float updatePrice = kb.nextFloat();
 
-    // updates the information
-    // embedded SQL code here
-    // UPDATE ()
+    try {
+      // Embedded SQL code
+      query = "select * from CLOSINGPRICE where symbol = ?";
+      ps = connection.prepareStatement(query);
+      ps.setString(1, choice);
+      res = ps.executeQuery();
+
+      System.out.println("Symbol\nPrice\nDate");
+
+      while (res.next()) {
+        System.out.println(res.getString(1)+"\t"+res.getFloat(2)+"\t"+res.getDate(3));
+      }
+
+      System.out.print("\nWhat price would you like to update the shares to: $");
+      float updatePrice = kb.nextFloat();
+
+      // updates the information
+      // embedded SQL code here
+      update = "insert into CLOSINGPRICE values (?, ?, 29-05-95";
+      ps = connection.prepareStatement(update);
+      ps.setString(1, symbol);
+      ps.setFloat(2, updatePrice);
+
+      ps.executeUpdate();
+    } catch (Exception ex) { ex.printStackTrace(); }
+
     System.out.println("The shares have been updated successfully!");
   } // end updateShare(String)
 
   // inserts a new mutual fund
-  public void addFund(String fund, String symbol) {
+  public void addFund(String symbol, String name, String description, String category) {
     // embedded SQL
     // INSERT INTO MUTUALFUND VALUES ();
+
+    try {
+      update = "insert into MUTUALFUND values(?, ?, ?, ?, '07-12-45");
+      ps = connection.prepareStatement(update);
+      ps.setString(1, symbol);
+      ps.setString(2, name);
+      ps.setString(3, description);
+      ps.setString(4, category);
+      ps.executeUpdate();
+    } catch (Exception ex) { ex.printStackTrace(); }
 
     System.out.println("The mutual fund has been added successfully!");
   } // end addFund(String, String)
 
   // updates the time and date requested from the administrator
   public void updateTime(String time, String date) {
-    System.out.println("The time and date have been updated successfully!");
+  System.out.println("The time and date have been updated successfully!");
   } // end updateTime(String, String)
 
   public void printStats(int monthNum, int topK) {
