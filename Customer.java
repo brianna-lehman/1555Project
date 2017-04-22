@@ -35,7 +35,7 @@ public class Customer {
 
 			// hard coded date because I couldn't figure out how to get date to work
 			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
-			currDate = new java.sql.Date(df.parse("2017-04-21").getTime());
+			currDate = new java.sql.Date(df.parse("21-04-17").getTime());
 
 		}
 		catch(Exception ex) {
@@ -54,13 +54,13 @@ public class Customer {
 			try {
 				statement = connection.createStatement();
 				res = statement.executeQuery("select * from MUTUALFUND");
-				System.out.println("Symbol\tName\tDescription\tCategory");
+				System.out.println("Symbol\tName\t\tDescription\t\tCategory");
 
 				while (res.next()) {
 					System.out.print(res.getString("symbol")+"\t");
-					System.out.print(res.getString("name")+"\t");
-					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t\n");
+					System.out.print(res.getString("name")+"\t\t");
+					System.out.print(res.getString("description")+"\t\t");
+					System.out.print(res.getString("category")+"\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 		}
@@ -76,13 +76,13 @@ public class Customer {
 				ps.setString(1, category);
 
 				res = ps.executeQuery();
-				System.out.println("Symbol\tName\tDescription\tCategory");
+				System.out.println("Symbol\tName\t\tDescription\t\tCategory");
 
 				while (res.next()) {
 					System.out.print(res.getString("symbol")+"\t");
-					System.out.print(res.getString("name")+"\t");
-					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t\n");
+					System.out.print(res.getString("name")+"\t\t");
+					System.out.print(res.getString("description")+"\t\t");
+					System.out.print(res.getString("category")+"\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
@@ -90,11 +90,11 @@ public class Customer {
 
 		// prints all the mutual funds that were created on a user specified day, ordered by price ascending
 		else if (choice == 3) {
-			System.out.print("Type in the date (dd/mm/yyyy): ");
+			System.out.print("Type in the date (dd-mm-yy): ");
 			String date_input = kb.next();
 
 			try {
-				java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd/mm/yyyy");
+				java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd-mm-yy");
 				java.sql.Date input_date = new java.sql.Date(df.parse(date_input).getTime());
 
 				//** sql **//
@@ -107,13 +107,13 @@ public class Customer {
 
 				res = ps.executeQuery();
 
-				System.out.println("Symbol\tName\tDescription\tCategory");
+				System.out.println("Symbol\tName\t\tDescription\t\tCategory");
 
 				while (res.next()) {
 					System.out.print(res.getString("symbol")+"\t");
-					System.out.print(res.getString("name")+"\t");
-					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t\n");
+					System.out.print(res.getString("name")+"\t\t");
+					System.out.print(res.getString("description")+"\t\t");
+					System.out.print(res.getString("category")+"\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 			//** sql **//
@@ -125,13 +125,13 @@ public class Customer {
 				statement = connection.createStatement();
 				res = statement.executeQuery("select * from MUTUALFUND order by name asc");
 
-				System.out.println("Symbol\tName\tDescription\tCategory");
+				System.out.println("Symbol\tName\t\tDescription\t\tCategory");
 
 				while (res.next()) {
 					System.out.print(res.getString("symbol")+"\t");
-					System.out.print(res.getString("name")+"\t");
-					System.out.print(res.getString("description")+"\t");
-					System.out.print(res.getString("category")+"\t\n");
+					System.out.print(res.getString("name")+"\t\t");
+					System.out.print(res.getString("description")+"\t\t");
+					System.out.print(res.getString("category")+"\n");
 				}
 			} catch (Exception ex) { ex.printStackTrace(); }
 		}
@@ -150,13 +150,13 @@ public class Customer {
 
 			res = ps.executeQuery();
 
-			System.out.println("Symbol\tName\tDescription\tCategory");
+			System.out.println("Symbol\tName\t\tDescription\t\tCategory");
 
 			while (res.next()) {
 				System.out.print(res.getString("symbol")+"\t");
-				System.out.print(res.getString("name")+"\t");
-				System.out.print(res.getString("description")+"\t");
-				System.out.print(res.getString("category")+"\t\n");
+				System.out.print(res.getString("name")+"\t\t");
+				System.out.print(res.getString("description")+"\t\t");
+				System.out.print(res.getString("category")+"\n");
 			}
 		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
@@ -332,7 +332,7 @@ public class Customer {
 			// printing the symbol, price, and number of shares bought on a specific date
 			// as well as the current price of the mutual fund
 			query = "select trx.symbol, trx.price, trx.num_shares, cp.price "+
-					"from TRXLOG trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) cp "+
+					"from TRXLOG as trx natural join (select * from MUTUALFUND natural join CLOSINGPRICE) as cp "+
 					"where t_date = ? and login = ?";
 			ps = connection.prepareStatement(query);
 			ps.setDate(1, t_date);

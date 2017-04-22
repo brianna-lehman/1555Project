@@ -240,7 +240,7 @@ public class BetterFuture {
 					// Display time and date
 					System.out.println("What would you like to update the time to: ");
 					time = kb.next();
-					System.out.println("What would you like to upate the date to: ");
+					System.out.println("What would you like to upate the date to (dd-mm-yy): ");
 					date = kb.next();
 					admin.updateTime(time, date);
 					break;
@@ -359,15 +359,15 @@ public class BetterFuture {
 			else if (menuChoice == 8) {
 				StringBuilder date = new StringBuilder();
 				System.out.println("Please enter a date in number format.");
-				System.out.print("Year (yyyy): ");
-				String year = kb.next();
-				date.append(year+"-");
+				System.out.print("Day (dd): ");
+				String day = kb.next();
+				date.append(day+"-");
 				System.out.print("Month (mm): ");
 				String month = kb.next();
 				date.append(month+"-");
-				System.out.print("Day (dd): ");
-				String day = kb.next();
-				date.append(day);
+				System.out.print("Year (yy): ");
+				String year = kb.next();
+				date.append(year);
 				customer.printPortfolio(date.toString());
 			}
 		} // end while
