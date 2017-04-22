@@ -157,8 +157,9 @@ public class Customer {
 		//** sql **//
 	}
 
-	// a certain percentage of the amount is invested in buying a specific mutual fund
-	// this doesn't check to make sure all the possible mutual funds can be bought
+	/* a certain percentage of the amount is invested in buying a specific mutual fund
+	 * this doesn't check to make sure all the possible mutual funds can be bought
+	 */
 	public void invest(float total_amount) {
 		//** sql **//
 		try {
@@ -168,7 +169,7 @@ public class Customer {
 			ps.setDate(2, currDate);
 			ps.setFloat(3, total_amount);
 			ps.executeUpdate();
-			// this triggers 'on_insert_log'
+			// this triggers 'on_deposit_log'
 		} catch (Exception ex) { ex.printStackTrace(); }
 		//** sql **//
 
@@ -213,7 +214,10 @@ public class Customer {
 		balance += total_price;
 	}
 
-	/** user can chose to buy mutual funds based on number of shares or price */
+	/** user can chose to buy mutual funds based on number of shares or price 
+	 *	this data gets inserted into the trxlog which triggers a decrease on customer's balance
+	 *	and puts the newly owned funds into the owns table
+	 */
 	public void buy(String symbol, int choice) {
 
 		// buying based on shares
@@ -317,7 +321,7 @@ public class Customer {
 
 	}
 
-	/** Calls a procedure that prints all transactions that this user has implemented */
+	/** prints all transactions that this user has implemented */
 	public void printPortfolio(String input_date) {
 		try {
 			java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-mm-dd");
