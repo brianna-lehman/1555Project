@@ -81,7 +81,7 @@ public class Admin {
       // embedded SQL code here
       update = "insert into CLOSINGPRICE values (?, ?, 29-05-95";
       ps = connection.prepareStatement(update);
-      ps.setString(1, symbol);
+      ps.setString(1, choice);
       ps.setFloat(2, updatePrice);
 
       ps.executeUpdate();
@@ -96,7 +96,7 @@ public class Admin {
     // INSERT INTO MUTUALFUND VALUES ();
 
     try {
-      update = "insert into MUTUALFUND values(?, ?, ?, ?, '07-12-45");
+      update = "insert into MUTUALFUND values(?, ?, ?, ?, '07-12-45";
       ps = connection.prepareStatement(update);
       ps.setString(1, symbol);
       ps.setString(2, name);
@@ -124,7 +124,7 @@ public class Admin {
       ps.executeQuery();
       update = "insert into MUTUALDATE values (to_date();(sysdate))";
       ps = connection.prepareStatement(update);
-      ps.executeQuery
+      ps.executeQuery();
     } catch (Exception e) { e.printStackTrace(); }
     // Update confirmation
     System.out.println("The time and date have been updated successfully!");
@@ -172,7 +172,7 @@ public class Admin {
       res = ps.executeQuery();
       // Display
       System.out.println("\nHere are top investors.. ");
-      System.out.println("\Login: \t\tSum: ");
+      System.out.println("\tLogin: \t\tSum: ");
       count = 0;
       while (topK >= count) {
         res.next();

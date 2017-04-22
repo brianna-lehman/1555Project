@@ -198,17 +198,16 @@ public class BetterFuture {
 					break;
 				// ADD A NEW MUTUAL FUND
 				case 3:
-					String symbol, name, description, category;
-					int cat;
 					System.out.println("What's the symbol for the mutual fund you want to add? ");
-					symbol = kb.next();
+					String symbol = kb.next();
 					System.out.println("Name? ");
-					name = kb.next();
+					String name = kb.next();
 					System.out.println("Description? ");
-					description = kb.nextLine();
+					String description = kb.nextLine();
 					System.out.println("What category will this fund be put under: ");
 					System.out.println("\t1. Bonds\n\t2. Stocks\n\t3. Fixed\n\t4. Mixed");
-					cat = kb.nextInt();
+					int cat = kb.nextInt();
+					String category = null;
 
 					// Possibly do category check here instead of the SQL level?
 					switch(cat) {
@@ -217,15 +216,12 @@ public class BetterFuture {
 								break;
 						case 2:
 								category = "stocks";
-								admin.addFund(fund, category);
 								break;
 						case 3:
 								category = "fixed";
-								admin.addFund(fund, category);
 								break;
 						case 4:
 								category = "mixed";
-								admin.addFund(fund, category);
 								break;
 						default:
 								System.out.println("Error: Please try again.");
