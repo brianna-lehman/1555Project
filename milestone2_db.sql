@@ -95,7 +95,10 @@ create or replace trigger decrease_customer_balance
 	end;
 /
 
--- **************    DOES NOT WORK    *******************
+create or replace view alloc_pref
+	select *
+	from ALLOCATION natural join PREFERS;
+
 -- Trigger set to insert buy transcations following the deposit insert into log
 -- when a deposit is made, it is assumed that the deposit money is going towards
 -- a buy to the customers mutual funds (the ones that preferenced)
@@ -104,15 +107,23 @@ create or replace trigger on_deposit_log
 	for each row
 	when (new.action = 'deposit')
 	begin
-		-- the code below will be included into this trigger. this trigger is an 
-		-- attempt of getting the information needed to update the shares bought
-		-- using the preferences listed by the user in the mutual funds
 		declare amount_to_invest float;
 		declare num_shares int;
 		declare single_price float;
 
-		-- for every tuple in the table ALLOCxPREF where login = :new.login
-			amount_to_invest = :new.amount * percentage;
+		declare cursor user_pref is
+			select *
+			from alloc_pref
+			where login = :new.login;
+		declare pref_record alloc_pref%rowtype;
+
+		-- for every tuple in the cursor user_pref
+		loop
+
+			fetch user_pref into pref_record
+			exit when user_pref%NOTFOUND;
+
+			amount_to_invest = :new.amount * pref_record.percentage;
 
 			-- call procedure num_shares_from_input_price(symbol, amount_to_invest, int num_shares, int share_price)
 			select round(amount_to_invest/price, 0, 1) into num_shares, price into single_price
@@ -120,24 +131,9 @@ create or replace trigger on_deposit_log
 			where symbol = :new.symbol; 
 			-- insert into TRXLOG values(trans_id++, login, symbol, date, 'buy', num_shares, share_price, amount_to_invest);
 			insert into TRXLOG values(1, :new.login, :new.symbol, :new.t_date, 'buy', num_shares, single_price, amount_to_invest);
+				
+		end loop;
+
+		close user_pref;
 	end;
 /
-
--- this cursor is used to get the different preferences and its distributions
-declare
-	cursor prefer_cursor is
-		select allocation_no, symbol, percentage
-		from ALLOCATION natural joins PREFERS;
- 	prefer_record ALLOCATION%rowtype;
-begin
-	if not prefer_cursor%isopen
-		then open prefer_cursor;
-	end if;
-	loop
-		fetch prefer_cursor into prefer_rec;
-		exit when prefer_record&notfound;
-		-- this area will contain a function that deposits the money 
-		-- based on the percentage of the fund
-	end loop;
-	close prefer_record;
-end;
