@@ -133,8 +133,18 @@ public class Admin {
   // prints current stats specifed by the admin
   public void printStats(int monthNum, int topK) {
     int count = 0;
+    String monthNeeded = "";
     // gets date
-    
+    String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP",
+                       "OCT", "NOV", "DEC"};
+    int april = 3;
+    if ((april - monthNum) < 0) {
+      int monthInd = (april - monthNum) * -1;
+      monthNeeded = months[months.length - ((april - monthNum) * 1)];
+    } else {
+      monthNeeded = months[april - monthNum];
+    }
+    String date = "01" + "-" + monthNeeded + "-" + "2017";
 
     try {
       // Categories
