@@ -214,25 +214,23 @@ public class BetterFuture {
 					switch(cat) {
 						case 1:
 								category = "bonds";
+								admin.addFund(symbol, name, description, category);
 								break;
 						case 2:
 								category = "stocks";
-								admin.addFund(fund, category);
+								admin.addFund(symbol, name, description, category);
 								break;
 						case 3:
 								category = "fixed";
-								admin.addFund(fund, category);
+								admin.addFund(symbol, name, description, category);
 								break;
 						case 4:
 								category = "mixed";
-								admin.addFund(fund, category);
+								admin.addFund(symbol, name, description, category);
 								break;
 						default:
 								System.out.println("Error: Please try again.");
 					} // end switch
-
-					admin.addFund(symbol, name, description, category);
-
 					break;
 				// UPDATE THE TIME AND DATE
 				case 4:
