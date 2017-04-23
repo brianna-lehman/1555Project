@@ -436,7 +436,6 @@ public class BetterFuture {
 		String name = "";
 		String email = "";
 		String address = "";
-		float balance;
 
 		//** embedded sql **//
 		//call check_login_admin(login, real_password, name, email, address);
@@ -451,7 +450,6 @@ public class BetterFuture {
 				name = resultSet.getString("name");
 				email = resultSet.getString("email");
 				address = resultSet.getString("address");
-				balance = resultSet.getFloat("balance");
 			}
 			else {
 				System.out.println("The username or password is incorrect.");
