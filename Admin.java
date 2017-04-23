@@ -143,9 +143,7 @@ public class Admin {
 
     try {
       // Categories
-      query = "select symbol, sum(amount) from TRXLOG where action <> 'deposit'"
-              + "and action <> 'sell' and trunc(t_date) between to_date(?)"
-              + "and to_date(sysdate) group by login order by sum(amount) desc";
+      query = "select symbol, sum(amount) from TRXLOG where action <> 'deposit' and action <> 'sell' and trunc(t_date) between to_date(?) and to_date(sysdate) group by login order by sum(amount) desc";
       ps = connection.prepareStatement(query);
       ps.setString(1, date);
       res = ps.executeQuery();
