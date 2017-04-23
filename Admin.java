@@ -96,7 +96,7 @@ public class Admin {
     // INSERT INTO MUTUALFUND VALUES ();
 
     try {
-      update = "insert into MUTUALFUND values(?, ?, ?, ?, '07-12-45";
+      update = "insert into MUTUALFUND values(?, ?, ?, ?, '07-12-45)";
       ps = connection.prepareStatement(update);
       ps.setString(1, symbol);
       ps.setString(2, name);
@@ -171,7 +171,7 @@ public class Admin {
       ps.setString(1, date);
       res = ps.executeQuery();
       // Display
-      System.out.println("\nHere are top investors.. ");
+      System.out.println("\nHere are top investors by login.. ");
       System.out.println("\tLogin: \t\tSum: ");
       count = 0;
       while (topK >= count) {
